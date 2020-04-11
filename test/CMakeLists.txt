@@ -42,7 +42,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lgtest")
 #p2p
 smi_target(test_p2p "${CMAKE_CURRENT_SOURCE_DIR}/p2p/p2p.json" "${CMAKE_CURRENT_SOURCE_DIR}/p2p/test_p2p.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/p2p/p2p_rank0.cl;${CMAKE_CURRENT_SOURCE_DIR}/p2p/p2p_rank1.cl" 8)
 target_link_libraries(test_p2p_host gtest)
-
 add_test(
    NAME p2p
    COMMAND  env  CL_CONTEXT_EMULATOR_DEVICE_INTELFPGA=8 mpirun -np 8 test_p2p_host
@@ -97,4 +96,13 @@ add_test(
    NAME mixed
    COMMAND  env  CL_CONTEXT_EMULATOR_DEVICE_INTELFPGA=8 mpirun -np 8 test_mixed_host
    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/test_mixed/"
+ )
+
+smi_target(test_balanced_routing "${CMAKE_CURRENT_SOURCE_DIR}/balanced_routing/balanced_routing.json" "${CMAKE_CURRENT_SOURCE_DIR}/balanced_routing/test_balanced_routing.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/balanced_routing/balanced_routing.cl" 8)
+target_link_libraries(test_balanced_routing_host gtest)
+
+add_test(
+   NAME balanced_routing
+   COMMAND  env  CL_CONTEXT_EMULATOR_DEVICE_INTELFPGA=8 mpirun -np 8 test_balanced_routing
+   WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/test_balanced_routing/"
  )
