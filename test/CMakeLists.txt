@@ -107,3 +107,13 @@ add_test(
    COMMAND  env  CL_CONTEXT_EMULATOR_DEVICE_INTELFPGA=8 mpirun -np 8 test_balanced_routing
    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/test_balanced_routing/"
  )
+
+smi_target(test_vector_data_types "${CMAKE_CURRENT_SOURCE_DIR}/vector_data_types/vector_data_types.json" "${CMAKE_CURRENT_SOURCE_DIR}/vector_data_types/test_vector_data_types.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/vector_data_types/vector_data_types.cl" 8 8 8 OFF)
+target_link_libraries(test_vector_data_types_host gtest)
+
+add_test(
+   NAME vector_data_types
+   COMMAND  env  CL_CONTEXT_EMULATOR_DEVICE_INTELFPGA=8 mpirun -np 8 test_vector_data_types
+   WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/test_vector_data_types/"
+ )
+
