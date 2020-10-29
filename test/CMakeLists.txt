@@ -59,6 +59,16 @@ add_test(
   WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/test_broadcast/"
 )
 
+#barrier
+smi_target(test_barrier "${CMAKE_CURRENT_SOURCE_DIR}/barrier/barrier.json" "${CMAKE_CURRENT_SOURCE_DIR}/barrier/test_barrier.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/barrier/barrier.cl" 8)
+target_link_libraries(test_barrier_host gtest)
+
+add_test(
+  NAME barrier
+  COMMAND  env  CL_CONTEXT_EMULATOR_DEVICE_INTELFPGA=8 mpirun -np 8 test_barrier_host
+  WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/test_barrier/"
+)
+
 #reduce
 smi_target(test_reduce "${CMAKE_CURRENT_SOURCE_DIR}/reduce/reduce.json" "${CMAKE_CURRENT_SOURCE_DIR}/reduce/test_reduce.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/reduce/reduce.cl" 8)
 target_link_libraries(test_reduce_host gtest)
