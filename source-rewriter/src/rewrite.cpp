@@ -45,6 +45,8 @@ public:
         this->extractors.push_back(std::make_unique<GatherChannelExtractor>());
         this->extractors.push_back(std::make_unique<ScatterExtractor>());
         this->extractors.push_back(std::make_unique<ScatterChannelExtractor>());
+        this->extractors.push_back(std::make_unique<BarrierExtractor>());
+        this->extractors.push_back(std::make_unique<BarrierChannelExtractor>());
 
         for (auto& extractor: this->extractors)
         {
