@@ -65,6 +65,7 @@ def codegen_device(routing_file, rewriter, src_dir, dest_dir, device_src,
     with open("rewrite.log", "w") as f:
         ops = []
         include_dirs = set(include.split(" "))
+        f.write(include_dirs)
         for (src, dest) in paths:
             ops += rewrite(rewriter, dest, include_dirs, f)
 
