@@ -37,6 +37,7 @@ SMI_Comm SmiInit_{{ name }}(
     {{ generate_collective_kernels("reduce", "smi_kernel_reduce") }}
     {{ generate_collective_kernels("scatter", "smi_kernel_scatter") }}
     {{ generate_collective_kernels("gather", "smi_kernel_gather") }}
+    {{ generate_collective_kernels("barrier", "smi_kernel_barrier") }}
 
     IntelFPGAOCLUtils::initEnvironment(
             platform, device, fpga, context,
@@ -93,6 +94,7 @@ SMI_Comm SmiInit_{{ name }}(
     {{ setup_collective_kernels("reduce") }}
     {{ setup_collective_kernels("scatter") }}
     {{ setup_collective_kernels("gather") }}
+    {{ setup_collective_kernels("barrier") }}
 
     // move buffers
     {% for channel in range(program.channel_count) %}

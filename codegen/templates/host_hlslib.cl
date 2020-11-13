@@ -66,6 +66,7 @@ SMI_Comm SmiInit_{{ name }}(
     {{ generate_collective_kernels("reduce", "smi_kernel_reduce") }}
     {{ generate_collective_kernels("scatter", "smi_kernel_scatter") }}
     {{ generate_collective_kernels("gather", "smi_kernel_gather") }}
+    {{ generate_collective_kernels("barrier", "smi_kernel_barrier") }}
 
     // start the kernels
     for (auto &k : comm_kernels) {
