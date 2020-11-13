@@ -1,5 +1,5 @@
 /**
-    Broadcast
+    Barrier
     Test must be executed with 8 ranks
  */
 
@@ -55,16 +55,16 @@ bool runAndReturn(hlslib::ocl::Kernel &kernel, hlslib::ocl::Buffer<char, hlslib:
     return res==1;
 }
 
-TEST(Broadcast, MPIinit)
+TEST(Barrier, MPIinit)
 {
     ASSERT_EQ(rank_count,8);
 }
 
-TEST(Broadcast, CharMessages)
+TEST(Barrier, CharMessages)
 {
     //with this test we evaluate the correctness of char messages transmission
     hlslib::ocl::Buffer<char, hlslib::ocl::Access::readWrite> check = context->MakeBuffer<char, hlslib::ocl::Access::readWrite>(1);
-    hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_char");
+    hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_barrier");
     std::vector<int> message_lengths={1,128,1024,1000};
     std::vector<int> roots={0,4,5};
     int runs=2;
@@ -96,234 +96,6 @@ TEST(Broadcast, CharMessages)
 }
 
 
-TEST(Broadcast, ShortMessages)
-{
-    //with this test we evaluate the correctness of integer messages transmission
-    hlslib::ocl::Buffer<char, hlslib::ocl::Access::readWrite> check = context->MakeBuffer<char, hlslib::ocl::Access::readWrite>(1);
-    hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_short");
-
-    std::vector<int> message_lengths={1,128,1024,10000};
-    std::vector<int> roots={0,4,7};
-    int runs=2;
-    for(int root:roots)    //consider different roots
-    {
-
-        for(int ml:message_lengths)     //consider different message lengths
-        {
-            cl::Kernel cl_kernel = kernel.kernel();
-            cl_kernel.setArg(0,sizeof(cl_mem),&check.devicePtr());
-            cl_kernel.setArg(1,sizeof(int),&ml);
-            cl_kernel.setArg(2,sizeof(char),&root);
-            cl_kernel.setArg(3,sizeof(SMI_Comm),&comm);
-
-            for(int i=0;i<runs;i++)
-            {
-                if(my_rank==0)  //remove emulated channels
-                    system("rm emulated_chan* 2> /dev/null;");
-
-
-                // run some_function() and compared with some_value
-                // but end the function if it exceeds x seconds
-                //source https://github.com/google/googletest/issues/348#issuecomment-492785854
-                ASSERT_DURATION_LE(TEST_TIMEOUT, {
-                  ASSERT_TRUE(runAndReturn(kernel,check));
-                });
-            }
-        }
-    }
-}
-
-TEST(Broadcast, IntegerMessages)
-{
-    //with this test we evaluate the correctness of integer messages transmission
-  
-    hlslib::ocl::Buffer<char, hlslib::ocl::Access::readWrite> check = context->MakeBuffer<char, hlslib::ocl::Access::readWrite>(1);
-    hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_int");
-
-    std::vector<int> message_lengths={1,128,1024,10000};
-    std::vector<int> roots={0,4,7};
-    int runs=2;
-    for(int root:roots)    //consider different roots
-    {
-
-        for(int ml:message_lengths)     //consider different message lengths
-        {
-            cl::Kernel cl_kernel = kernel.kernel();
-            cl_kernel.setArg(0,sizeof(cl_mem),&check.devicePtr());
-            cl_kernel.setArg(1,sizeof(int),&ml);
-            cl_kernel.setArg(2,sizeof(char),&root);
-            cl_kernel.setArg(3,sizeof(SMI_Comm),&comm);
-
-            for(int i=0;i<runs;i++)
-            {
-                if(my_rank==0)  //remove emulated channels
-                    system("rm emulated_chan* 2> /dev/null;");
-
-
-                // run some_function() and compared with some_value
-                // but end the function if it exceeds 3 seconds
-                //source https://github.com/google/googletest/issues/348#issuecomment-492785854
-                ASSERT_DURATION_LE(TEST_TIMEOUT, {
-                  ASSERT_TRUE(runAndReturn(kernel,check));
-                });
-            }
-        }
-    }
-}
-
-TEST(Broadcast, FloatMessages)
-{
-    //with this test we evaluate the correctness of integer messages transmission
-
-    hlslib::ocl::Buffer<char, hlslib::ocl::Access::readWrite> check = context->MakeBuffer<char, hlslib::ocl::Access::readWrite>(1);
-    hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_float");
-
-    std::vector<int> message_lengths={1,128,1024,10000};
-    std::vector<int> roots={0,4,7};
-    int runs=2;
-    for(int root:roots)    //consider different roots
-    {
-
-        for(int ml:message_lengths)     //consider different message lengths
-        {
-            cl::Kernel cl_kernel = kernel.kernel();
-            cl_kernel.setArg(0,sizeof(cl_mem),&check.devicePtr());
-            cl_kernel.setArg(1,sizeof(int),&ml);
-            cl_kernel.setArg(2,sizeof(char),&root);
-            cl_kernel.setArg(3,sizeof(SMI_Comm),&comm);
-
-            for(int i=0;i<runs;i++)
-            {
-                if(my_rank==0)  //remove emulated channels
-                    system("rm emulated_chan* 2> /dev/null;");
-
-
-                // run some_function() and compared with some_value
-                // but end the function if it exceeds 3 seconds
-                //source https://github.com/google/googletest/issues/348#issuecomment-492785854
-                ASSERT_DURATION_LE(TEST_TIMEOUT, {
-                  ASSERT_TRUE(runAndReturn(kernel,check));
-                });
-            }
-        }
-    }
-}
-
-TEST(Broadcast, DoubleMessages)
-{
-    //with this test we evaluate the correctness of integer messages transmission
-
-    hlslib::ocl::Buffer<char, hlslib::ocl::Access::readWrite> check = context->MakeBuffer<char, hlslib::ocl::Access::readWrite>(1);
-    hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_double");
-
-    std::vector<int> message_lengths={1,128,1024,10000};
-    std::vector<int> roots={0,4,7};
-    int runs=2;
-    for(int root:roots)    //consider different roots
-    {
-
-        for(int ml:message_lengths)     //consider different message lengths
-        {
-            cl::Kernel cl_kernel = kernel.kernel();
-            cl_kernel.setArg(0,sizeof(cl_mem),&check.devicePtr());
-            cl_kernel.setArg(1,sizeof(int),&ml);
-            cl_kernel.setArg(2,sizeof(char),&root);
-            cl_kernel.setArg(3,sizeof(SMI_Comm),&comm);
-
-            for(int i=0;i<runs;i++)
-            {
-                if(my_rank==0)  //remove emulated channels
-                    system("rm emulated_chan* 2> /dev/null;");
-
-
-                // run some_function() and compared with some_value
-                // but end the function if it exceeds 3 seconds
-                //source https://github.com/google/googletest/issues/348#issuecomment-492785854
-                ASSERT_DURATION_LE(TEST_TIMEOUT, {
-                  ASSERT_TRUE(runAndReturn(kernel,check));
-                });
-            }
-        }
-    }
-}
-
-
-TEST(Broadcast, IntegerMessagesAD)
-{
-    //with this test we evaluate the correcteness of integer messages transmission
-
-    hlslib::ocl::Buffer<char, hlslib::ocl::Access::readWrite> check = context->MakeBuffer<char, hlslib::ocl::Access::readWrite>(1);
-    hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_int_ad");
-
-    std::vector<int> message_lengths={1,128,1024,10000};
-    std::vector<int> roots={0,4,7};
-    int runs=2;
-    for(int root:roots)    //consider different roots
-    {
-
-        for(int ml:message_lengths)     //consider different message lengths
-        {
-            cl::Kernel cl_kernel = kernel.kernel();
-            cl_kernel.setArg(0,sizeof(cl_mem),&check.devicePtr());
-            cl_kernel.setArg(1,sizeof(int),&ml);
-            cl_kernel.setArg(2,sizeof(char),&root);
-            cl_kernel.setArg(3,sizeof(SMI_Comm),&comm);
-
-            for(int i=0;i<runs;i++)
-            {
-                if(my_rank==0)  //remove emulated channels
-                    system("rm emulated_chan* 2> /dev/null;");
-
-
-                // run some_function() and compared with some_value
-                // but end the function if it exceeds 3 seconds
-                //source https://github.com/google/googletest/issues/348#issuecomment-492785854
-                ASSERT_DURATION_LE(TEST_TIMEOUT, {
-                  ASSERT_TRUE(runAndReturn(kernel,check));
-                });
-            }
-        }
-    }
-}
-
-TEST(Broadcast, FloatMessagesAD)
-{
-    //with this test we evaluate the correctness of integer messages transmission
-
-    hlslib::ocl::Buffer<char, hlslib::ocl::Access::readWrite> check = context->MakeBuffer<char, hlslib::ocl::Access::readWrite>(1);
-    hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_float_ad");
-
-    std::vector<int> message_lengths={1,128,1024,10000};
-    std::vector<int> roots={0,4,7};
-    int runs=2;
-    for(int root:roots)    //consider different roots
-    {
-
-        for(int ml:message_lengths)     //consider different message lengths
-        {
-            cl::Kernel cl_kernel = kernel.kernel();
-            cl_kernel.setArg(0,sizeof(cl_mem),&check.devicePtr());
-            cl_kernel.setArg(1,sizeof(int),&ml);
-            cl_kernel.setArg(2,sizeof(char),&root);
-            cl_kernel.setArg(3,sizeof(SMI_Comm),&comm);
-
-            for(int i=0;i<runs;i++)
-            {
-                if(my_rank==0)  //remove emulated channels
-                    system("rm emulated_chan* 2> /dev/null;");
-
-
-                // run some_function() and compared with some_value
-                // but end the function if it exceeds 3 seconds
-                //source https://github.com/google/googletest/issues/348#issuecomment-492785854
-                ASSERT_DURATION_LE(TEST_TIMEOUT, {
-                  ASSERT_TRUE(runAndReturn(kernel,check));
-                });
-            }
-        }
-    }
-}
-
 int main(int argc, char *argv[])
 {
 
@@ -336,7 +108,7 @@ int main(int argc, char *argv[])
     if(argc==2)
         program_path =argv[1];
     else
-        program_path="emulator_<rank>/broadcast.aocx";
+        program_path="emulator_<rank>/barrier.aocx";
     ::testing::TestEventListeners& listeners =
             ::testing::UnitTest::GetInstance()->listeners();
     CHECK_MPI(MPI_Init(&argc, &argv));
@@ -353,7 +125,7 @@ int main(int argc, char *argv[])
     context = new hlslib::ocl::Context();
     auto program =  context->MakeProgram(program_path);
     std::vector<hlslib::ocl::Buffer<char, hlslib::ocl::Access::read>> buffers;
-    comm=SmiInit_broadcast(my_rank, rank_count, ROUTING_DIR, *context, program, buffers);
+    comm=SmiInit_barrier(my_rank, rank_count, ROUTING_DIR, *context, program, buffers);
     result = RUN_ALL_TESTS();
     MPI_Finalize();
 

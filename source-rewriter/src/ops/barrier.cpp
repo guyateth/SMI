@@ -18,7 +18,7 @@ OperationMetadata BarrierExtractor::GetOperationMetadata(CallExpr* callExpr)
 }
 std::string BarrierExtractor::CreateDeclaration(const std::string& callName, const OperationMetadata& metadata)
 {
-    return "void " + this->RenameCall(callName, metadata) + "(SMI_Channel* chan, void* data);";
+    return "void " + this->RenameCall(callName, metadata) + "(SMI_Channel* chan);";
 }
 std::vector<std::string> BarrierExtractor::GetFunctionNames()
 {

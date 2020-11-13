@@ -52,7 +52,7 @@ __kernel void smi_kernel_barrier_{{ op.logical_port }}(char num_rank)
 {%- endmacro %}
 
 {%- macro smi_barrier_impl(program, op) -%}
-void {{ utils.impl_name_port_type("SMI_Barrier", op) }}(SMI_BChannel* chan, void* data)
+void {{ utils.impl_name_port_type("SMI_Barrier", op) }}(SMI_BChannel* chan)
 {
     // In a barrier we dont need packetization, as we only send control messages
     SET_HEADER_NUM_ELEMS(chan->net.header, 1);
