@@ -15,7 +15,8 @@ typedef enum{
     SMI_SYNCH=3,        //special operation type used for synchronization/rendezvou
     SMI_SCATTER=4,
     SMI_REDUCE=5,
-    SMI_GATHER=6
+    SMI_GATHER=6,
+    SMI_BARRIER=7
 }SMI_Operationtype;
 
 #endif

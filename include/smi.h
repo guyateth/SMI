@@ -18,4 +18,5 @@
 #include "smi/reduce.h"
 #include "smi/gather.h"
 #include "smi/scatter.h"
+#include "smi/barrier.h"
 #endif // SMI_H

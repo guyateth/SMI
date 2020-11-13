@@ -8,6 +8,7 @@
 #include "ops/scatter.h"
 #include "ops/gather.h"
 #include "ops/reduce.h"
+#include "ops/barrier.h"
 
 #include <iostream>
 

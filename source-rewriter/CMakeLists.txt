@@ -13,6 +13,7 @@ set(SOURCES
         src/ops/scatter.cpp
         src/ops/gather.cpp
         src/ops/reduce.cpp
+        src/ops/barrier.cpp
 )
 
 add_executable(rewriter ${SOURCES})

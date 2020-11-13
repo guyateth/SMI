@@ -9,6 +9,8 @@ KEY_REDUCE_SEND = "reduce_send"
 KEY_REDUCE_RECV = "reduce_recv"
 KEY_SCATTER = "scatter"
 KEY_GATHER = "gather"
+KEY_BARRIER_LOCK = "barrier_lock"
+KEY_BARRIER_LIFT = "barrier_lift"
 
 DATA_TYPE_SIZE = {
     "char":     1,
@@ -49,7 +51,8 @@ class SmiOperation:
             "reduce_send": 1,
             "reduce_recv": 1,
             "scatter": 1,
-            "gather": 1
+            "gather": 1,
+            "barrier": 1
         }
         return mapping[channel]
 
@@ -199,6 +202,16 @@ class Gather(SmiOperation):
             KEY_GATHER
         }
 
+class Barrier(SmiOperation):
+    def channel_usage(self, p2p_rendezvous: bool) -> Set[str]:
+        return {
+            KEY_CKS_DATA,
+            KEY_CKS_CONTROL,
+            KEY_CKR_DATA,
+            KEY_CKR_CONTROL,
+            KEY_BARRIER_LOCK,
+            KEY_BARRIER_LIFT
+        }
 
 OP_MAPPING = {
     "push": Push,
@@ -206,5 +219,6 @@ OP_MAPPING = {
     "broadcast": Broadcast,
     "reduce": Reduce,
     "scatter": Scatter,
-    "gather": Gather
+    "gather": Gather,
+    "barrier": Barrier
 }
