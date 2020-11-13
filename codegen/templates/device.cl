@@ -65,6 +65,7 @@ channel SMI_Network_message channels_interconnect_ck_r_to_ck_s[QSFP_COUNT] __att
 #include "smi/reduce.h"
 #include "smi/scatter.h"
 #include "smi/gather.h"
+#include "smi/barrier.h"
 #include "smi/communicator.h"
 
 {% for channel in channels %}
@@ -100,3 +101,7 @@ channel SMI_Network_message channels_interconnect_ck_r_to_ck_s[QSFP_COUNT] __att
 {{ generate_op_impl("reduce", smi_reduce.smi_reduce_kernel) }}
 {{ generate_op_impl("reduce", smi_reduce.smi_reduce_channel) }}
 {{ generate_op_impl("reduce", smi_reduce.smi_reduce_impl) }}
+// Barrier
+{{ generate_op_impl("barrier", smi_reduce.smi_barrier_kernel) }}
+{{ generate_op_impl("barrier", smi_reduce.smi_barrier_channel) }}
+{{ generate_op_impl("barrier", smi_reduce.smi_barrier_impl) }}

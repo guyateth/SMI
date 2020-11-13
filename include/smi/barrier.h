@@ -15,8 +15,8 @@
 #include "communicator.h"
 
 /**
- * @brief SMI_Open_bcast_channel opens a broadcast channel
- * @param count number of data elements to broadcast
+ * @brief SMI_Open_bcast_channel opens a barrier channel
+ * @param count number of data elements to barrier
  * @param data_type type of the channel
  * @param port port number
  * @param root rank of the root
@@ -26,8 +26,8 @@
 SMI_BChannel SMI_Open_barrier_channel(int count, SMI_Datatype data_type, int port, int root, SMI_Comm comm);
 
 /**
- * @brief SMI_Open_bcast_channel_ad opens a broadcast channel with a given asynchronicity degree
- * @param count number of data elements to broadcast
+ * @brief SMI_Open_bcast_channel_ad opens a barrier channel with a given asynchronicity degree
+ * @param count number of data elements to barrier
  * @param data_type type of the channel
  * @param port port number
  * @param root rank of the root
@@ -39,7 +39,7 @@ SMI_BChannel SMI_Open_barrier_channel_ad(int count, SMI_Datatype data_type, int 
 
 /**
  * @brief SMI_Bcast
- * @param chan pointer to the broadcast channel descriptor
+ * @param chan pointer to the barrier channel descriptor
  * @param data pointer to the data element: on the root rank is the element that will be transmitted,
     on the non-root rank will be the received element
  */
