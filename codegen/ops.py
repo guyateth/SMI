@@ -52,7 +52,8 @@ class SmiOperation:
             "reduce_recv": 1,
             "scatter": 1,
             "gather": 1,
-            "barrier": 1
+            "barrier_lock": 1,
+            "barrier_lift": 1
         }
         return mapping[channel]
 
