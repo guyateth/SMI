@@ -9,6 +9,7 @@
 {% import 'reduce.cl' as smi_reduce %}
 {% import 'scatter.cl' as smi_scatter %}
 {% import 'gather.cl' as smi_gather %}
+{% import 'barrier.cl' as smi_barrier %}
 
 // the maximum number of consecutive reads that each CKs/CKr can do from the same channel
 #define READS_LIMIT {{ program.consecutive_read_limit }}
@@ -102,6 +103,6 @@ channel SMI_Network_message channels_interconnect_ck_r_to_ck_s[QSFP_COUNT] __att
 {{ generate_op_impl("reduce", smi_reduce.smi_reduce_channel) }}
 {{ generate_op_impl("reduce", smi_reduce.smi_reduce_impl) }}
 // Barrier
-{{ generate_op_impl("barrier", smi_reduce.smi_barrier_kernel) }}
-{{ generate_op_impl("barrier", smi_reduce.smi_barrier_channel) }}
-{{ generate_op_impl("barrier", smi_reduce.smi_barrier_impl) }}
+{{ generate_op_impl("barrier", smi_barrier.smi_barrier_kernel) }}
+{{ generate_op_impl("barrier", smi_barrier.smi_barrier_channel) }}
+{{ generate_op_impl("barrier", smi_barrier.smi_barrier_impl) }}
