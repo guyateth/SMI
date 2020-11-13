@@ -11,7 +11,7 @@ int main(int argc, const char** argv)
 {
     CommonOptionsParser op(argc, argv, Opt);
     ClangTool Tool(op.getCompilations(), op.getSourcePathList());
-    printf("got called\n");
+
     return Tool.run(clang::tooling::newFrontendActionFactory<SpecializeCallsAction>().get());
 }
 
