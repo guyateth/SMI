@@ -23,7 +23,7 @@
  * @param comm communicator
  * @return the channel descriptor
  */
-SMI_Channel SMI_Open_barrier_channel(int count, SMI_Datatype data_type, int port, int root, SMI_Comm comm);
+SMI_Channel SMI_Open_barrier_channel(int count, int port, int root, SMI_Comm comm);
 
 /**
  * @brief SMI_Open_bcast_channel_ad opens a barrier channel with a given asynchronicity degree
@@ -35,7 +35,7 @@ SMI_Channel SMI_Open_barrier_channel(int count, SMI_Datatype data_type, int port
  * @param asynch_degree the asynchronicity degree in number of data elements
  * @return the channel descriptor
  */
-SMI_Channel SMI_Open_barrier_channel_ad(int count, SMI_Datatype data_type, int port, int root, SMI_Comm comm, int asynch_degree);
+SMI_Channel SMI_Open_barrier_channel_ad(int count, int port, int root, SMI_Comm comm, int asynch_degree);
 
 /**
  * @brief SMI_Bcast
