@@ -44,4 +44,4 @@ SMI_Channel SMI_Open_barrier_channel_ad(int count, int port, int root, SMI_Comm 
     on the non-root rank will be the received element
  */
 void SMI_Barrier(SMI_Channel *chan);
-#endif // BCAST_H
+#endif // BARRIER_H
