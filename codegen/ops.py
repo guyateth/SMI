@@ -221,5 +221,5 @@ OP_MAPPING = {
     "reduce": Reduce,
     "scatter": Scatter,
     "gather": Gather,
-    "barrier": Barrier
+    "barrier": Barrier,
 }

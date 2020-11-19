@@ -7,8 +7,8 @@ static OperationMetadata extractBarrier(CallExpr* channelDecl)
 {
     return OperationMetadata("barrier",
                              extractIntArg(channelDecl, 3),
-                             extractDataType(channelDecl, 1),
-                             extractBufferSize(channelDecl, 5)
+                             extractDataType(channelDecl, 2),
+                             extractBufferSize(channelDecl, 6)
     );
 }
 
