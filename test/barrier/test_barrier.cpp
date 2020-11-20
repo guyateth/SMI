@@ -60,7 +60,7 @@ TEST(Barrier, MPIinit)
     ASSERT_EQ(rank_count,8);
 }
 
-TEST(Barrier, CharMessages)
+TEST(Barrier, Test)
 {
     //with this test we evaluate the correctness of char messages transmission
     hlslib::ocl::Buffer<char, hlslib::ocl::Access::readWrite> check = context->MakeBuffer<char, hlslib::ocl::Access::readWrite>(1);
@@ -95,7 +95,7 @@ TEST(Barrier, CharMessages)
     }
 }
 
-TEST(Barrier, CharMessages)
+TEST(Barrier, Test2)
 {
     //with this test we evaluate the correctness of char messages transmission
     hlslib::ocl::Buffer<char, hlslib::ocl::Access::readWrite> check = context->MakeBuffer<char, hlslib::ocl::Access::readWrite>(1);
