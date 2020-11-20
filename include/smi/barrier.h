@@ -23,6 +23,7 @@ typedef struct __attribute__((packed)) __attribute__((aligned(64))){
     char num_rank;
     char port;                          //Port number
     char packet_element_id_rcv;         //used by the receivers
+    unsigned int message_size;          //given in number of data elements
     bool init;                          //true at the beginning, used by the receivers for synchronization
 }SMI_BarrierChannel;
 
