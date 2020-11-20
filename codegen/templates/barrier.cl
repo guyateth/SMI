@@ -29,8 +29,9 @@ __kernel void smi_kernel_barrier_{{ op.logical_port }}(char num_rank)
         {
             if (received_request != 0)
             {
-                printf("Got msg to kern (from any: %d)\n", GET_HEADER_SRC(mess.header));
+                printf("Before recv\n");
                 SMI_Network_message req = read_channel_intel({{ op.get_channel("ckr_control") }});
+                printf("Got msg to kern (from any: %d)\n", GET_HEADER_SRC(mess.header));
                 received_request--;
             }
             else
