@@ -10,12 +10,10 @@ __kernel void test_barrier(__global char* mem, const int N, char root,SMI_Comm c
 {
     char check=1;
     SMI_BarrierChannel  __attribute__((register)) chan= SMI_Open_barrier_channel(N,0, root,comm);
-    for(int i=0;i<N;i++)
-    {
 
-        SMI_Barrier(&chan);
+    SMI_Barrier(&chan);
 
-    }
+
     *mem=check;
 }
 
@@ -23,11 +21,10 @@ __kernel void test_barrier_2(__global char* mem, const int N, char root,SMI_Comm
 {
     char check=1;
     SMI_BarrierChannel  __attribute__((register)) chan= SMI_Open_barrier_channel(N,1, root,comm);
-    for(int i=0;i<N;i++)
-    {
 
-        SMI_Barrier(&chan);
 
-    }
+    SMI_Barrier(&chan);
+
+
     *mem=check;
 }
