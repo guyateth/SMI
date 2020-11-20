@@ -6,9 +6,9 @@ using namespace clang;
 static OperationMetadata extractBarrier(CallExpr* channelDecl)
 {
     return OperationMetadata("barrier",
-                             extractIntArg(channelDecl, 2),
-                             extractDataType(channelDecl, 2),
-                             extractBufferSize(channelDecl, 6)
+                             extractIntArg(channelDecl, 1),
+                             DataType::Int,
+                             extractBufferSize(channelDecl, 5)
     );
 }
 
