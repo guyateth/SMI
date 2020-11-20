@@ -52,7 +52,7 @@ __kernel void smi_kernel_barrier_{{ op.logical_port }}(char num_rank)
 {%- endmacro %}
 
 {%- macro smi_barrier_impl(program, op) -%}
-void {{ utils.impl_name_port_type("SMI_Barrier", op) }}(SMI_BChannel* chan)
+void {{ utils.impl_name_port_type("SMI_Barrier", op) }}(SMI_BarrierChannel* chan)
 {
     // In a barrier we dont need packetization, as we only send control messages
     SET_HEADER_NUM_ELEMS(chan->net.header, 1);
@@ -78,7 +78,7 @@ void {{ utils.impl_name_port_type("SMI_Barrier", op) }}(SMI_BChannel* chan)
 {%- endmacro %}
 
 {%- macro smi_barrier_channel(program, op) -%}
-SMI_Channel {{ utils.impl_name_port_type("SMI_Open_barrier_channel", op) }}(int count, int port, int root, SMI_Comm comm)
+SMI_BarrierChannel {{ utils.impl_name_port_type("SMI_Open_barrier_channel", op) }}(int count, int port, int root, SMI_Comm comm)
 {
     SMI_Channel chan;
     // setup channel descriptor
@@ -87,10 +87,6 @@ SMI_Channel {{ utils.impl_name_port_type("SMI_Open_barrier_channel", op) }}(int 
     chan.root_rank = (char) root;
     chan.num_rank = (char) SMI_Comm_size(comm);
     chan.message_size = (unsigned int) count;
-    chan.data_type = SMI_INT;
-    chan.op_type = SMI_RECEIVE;
-    chan.elements_per_packet = {{ op.data_elements_per_packet() }};
-    chan.max_tokens = {{ op.buffer_size * op.data_elements_per_packet() }};
 
     if (chan.my_rank != chan.root_rank)
     {

@@ -18,7 +18,7 @@ OperationMetadata BarrierExtractor::GetOperationMetadata(CallExpr* callExpr)
 }
 std::string BarrierExtractor::CreateDeclaration(const std::string& callName, const OperationMetadata& metadata)
 {
-    return "void " + this->RenameCall(callName, metadata) + "(SMI_Channel* chan);";
+    return "void " + this->RenameCall(callName, metadata) + "(SMI_BarrierChannel* chan);";
 }
 std::vector<std::string> BarrierExtractor::GetFunctionNames()
 {
@@ -31,7 +31,7 @@ OperationMetadata BarrierChannelExtractor::GetOperationMetadata(CallExpr* callEx
 }
 std::string BarrierChannelExtractor::CreateDeclaration(const std::string& callName, const OperationMetadata& metadata)
 {
-    return this->CreateChannelDeclaration(callName, metadata, "SMI_Channel", "int count, int port, int root, SMI_Comm comm");
+    return this->CreateChannelDeclaration(callName, metadata, "SMI_BarrierChannel", "int count, int port, int root, SMI_Comm comm");
 }
 std::string BarrierChannelExtractor::GetChannelFunctionName()
 {
