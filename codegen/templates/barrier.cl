@@ -73,7 +73,7 @@ void {{ utils.impl_name_port_type("SMI_Barrier", op) }}(SMI_BarrierChannel* chan
     }
     else
     {
-        SET_HEADER_OP(chan.net.header, SMI_SYNCH);
+        SET_HEADER_OP(chan->net.header, SMI_SYNCH);
         // send "awaiting at barrier"
         printf("Send msg to kern (from any: %d)\n", chan->my_rank);
         write_channel_intel({{ op.get_channel("cks_control") }}, chan->net);
