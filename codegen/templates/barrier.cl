@@ -15,6 +15,7 @@ __kernel void smi_kernel_barrier_{{ op.logical_port }}(char num_rank)
         if (external) // read from the application
         {
             mess = read_channel_intel({{ op.get_channel("barrier_lock") }});
+            printf("Got msg to kern (from root)\n");
             if (GET_HEADER_OP(mess.header) == SMI_BARRIER)   // beginning of a barrier, we have to wait for "ready to receive"
             {
                 received_request = num_requests;
@@ -28,6 +29,7 @@ __kernel void smi_kernel_barrier_{{ op.logical_port }}(char num_rank)
         {
             if (received_request != 0)
             {
+                printf("Got msg to kern (from any: %d)\n", GET_HEADER_SRC(mess.header));
                 SMI_Network_message req = read_channel_intel({{ op.get_channel("ckr_control") }});
                 received_request--;
             }
@@ -35,6 +37,7 @@ __kernel void smi_kernel_barrier_{{ op.logical_port }}(char num_rank)
             {
                 if (rcv != root) // it's not me
                 {
+                    printf("send to %d)\n", rcv);
                     SET_HEADER_DST(mess.header, rcv);
                     SET_HEADER_PORT(mess.header, {{ op.logical_port }});
                     write_channel_intel({{ op.get_channel("cks_data") }}, mess);
@@ -60,6 +63,7 @@ void {{ utils.impl_name_port_type("SMI_Barrier", op) }}(SMI_BarrierChannel* chan
     if (chan->my_rank == chan->root_rank) // root
     {
         SET_HEADER_OP(chan->net.header, SMI_BARRIER);          // after sending the first element of this reduce
+        printf("Send msg to kern (from root)\n");
         write_channel_intel({{ op.get_channel("barrier_lock") }}, chan->net);
         
         mem_fence(CLK_CHANNEL_MEM_FENCE);
