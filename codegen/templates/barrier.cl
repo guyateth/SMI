@@ -84,6 +84,7 @@ void {{ utils.impl_name_port_type("SMI_Barrier", op) }}(SMI_BarrierChannel* chan
 {%- macro smi_barrier_channel(program, op) -%}
 SMI_BarrierChannel {{ utils.impl_name_port_type("SMI_Open_barrier_channel", op) }}(int count, int port, int root, SMI_Comm comm)
 {
+    printf("Setup for: %d C: %d P: %d, R: %d\n", SMI_Comm_rank(comm), count, port, root);
     SMI_BarrierChannel chan;
     // setup channel descriptor
     chan.port = (char) port;
