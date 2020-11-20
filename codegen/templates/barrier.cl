@@ -64,17 +64,17 @@ void {{ utils.impl_name_port_type("SMI_Barrier", op) }}(SMI_BarrierChannel* chan
     if (chan->my_rank == chan->root_rank) // root
     {
         SET_HEADER_OP(chan->net.header, SMI_BARRIER);          // after sending the first element of this reduce
-        
-        write_channel_intel({{ op.get_channel("barrier_lock") }}, chan->net);
         printf("Send msg to kern (from root: %d)\n", chan->my_rank);
+        write_channel_intel({{ op.get_channel("barrier_lock") }}, chan->net);
+        
         mem_fence(CLK_CHANNEL_MEM_FENCE);
         chan->net_2 = read_channel_intel({{ op.get_channel("barrier_lift") }});
         // copy data from the network message to user variable
     }
     else
     {
+        SET_HEADER_OP(chan.net.header, SMI_SYNCH);
         // send "awaiting at barrier"
-        SET_HEADER_OP(chan->net.header,SMI_BARRIER);
         printf("Send msg to kern (from any: %d)\n", chan->my_rank);
         write_channel_intel({{ op.get_channel("cks_control") }}, chan->net);
         mem_fence(CLK_CHANNEL_MEM_FENCE);
