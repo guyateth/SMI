@@ -104,9 +104,7 @@ SMI_BarrierChannel {{ utils.impl_name_port_type("SMI_Open_barrier_channel", op) 
         SET_HEADER_PORT(chan.net.header, chan.port);         // used by destination
         SET_HEADER_NUM_ELEMS(chan.net.header, 0);            // at the beginning no data
     }
-    chan.processed_elements = 0;
-    chan.packet_element_id = 0;
-    chan.packet_element_id_rcv = 0;
+
     return chan;
 }
 {%- endmacro -%}
