@@ -36,7 +36,6 @@ __kernel void test_barrier_timeout(__global char* mem, const int N,SMI_Comm comm
     
     SMI_BarrierChannel  __attribute__((register)) chan= SMI_Open_barrier_channel(N,2,comm);
     if (SMI_Comm_rank(comm) == 1){
-        printf("Here we dont enter the barrier.\n");
         *mem=check;
     } else {
         SMI_Barrier(&chan);
