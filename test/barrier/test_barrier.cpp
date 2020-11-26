@@ -49,7 +49,6 @@ SMI_Comm comm;
   }, std::ref(completed)).detach(); \
   if(stmt_future.wait_for(std::chrono::seconds(secs)) == std::future_status::timeout){ \
     GTEST_SUCCEED(); \
-    MPI_Finalize();\
     } \
 }
 
