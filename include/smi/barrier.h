@@ -36,7 +36,7 @@ typedef struct __attribute__((packed)) __attribute__((aligned(64))){
  * @param comm communicator
  * @return the channel descriptor
  */
-SMI_BarrierChannel SMI_Open_barrier_channel(int count, int port, int root, SMI_Comm comm);
+SMI_BarrierChannel SMI_Open_barrier_channel(int count, int port, SMI_Comm comm);
 
 /**
  * @brief SMI_Open_bcast_channel_ad opens a barrier channel with a given asynchronicity degree
@@ -48,7 +48,7 @@ SMI_BarrierChannel SMI_Open_barrier_channel(int count, int port, int root, SMI_C
  * @param asynch_degree the asynchronicity degree in number of data elements
  * @return the channel descriptor
  */
-SMI_BarrierChannel SMI_Open_barrier_channel_ad(int count, int port, int root, SMI_Comm comm, int asynch_degree);
+SMI_BarrierChannel SMI_Open_barrier_channel_ad(int count, int port, SMI_Comm comm, int asynch_degree);
 
 /**
  * @brief SMI_Bcast

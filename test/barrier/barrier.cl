@@ -6,25 +6,26 @@
 #include <smi.h>
 
 
-__kernel void test_barrier(__global char* mem, const int N, char root,SMI_Comm comm)
+__kernel void test_barrier(__global char* mem, const int N,SMI_Comm comm)
 {
     char check=1;
-    SMI_BarrierChannel  __attribute__((register)) chan= SMI_Open_barrier_channel(N,0, root,comm);
-    printf("Reached for: %d\n", chan.my_rank);
+    SMI_BarrierChannel  __attribute__((register)) chan= SMI_Open_barrier_channel(N,0,comm);
+    
     SMI_Barrier(&chan);
 
 
     *mem=check;
 }
 
-__kernel void test_barrier_2(__global char* mem, const int N, char root,SMI_Comm comm)
+__kernel void test_barrier_2(__global char* mem, const int N,SMI_Comm comm)
 {
     char check=1;
-    SMI_BarrierChannel  __attribute__((register)) chan= SMI_Open_barrier_channel(N,1, root,comm);
+    SMI_BarrierChannel  __attribute__((register)) chan= SMI_Open_barrier_channel(N,1,comm);
 
-
-    SMI_Barrier(&chan);
-
+    for(int i=0;i<N;i++)
+    {
+        SMI_Barrier(&chan);
+    }
 
     *mem=check;
 }

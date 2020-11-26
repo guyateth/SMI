@@ -8,7 +8,7 @@ static OperationMetadata extractBarrier(CallExpr* channelDecl)
     return OperationMetadata("barrier",
                              extractIntArg(channelDecl, 1),
                              DataType::Int,
-                             extractBufferSize(channelDecl, 5)
+                             extractBufferSize(channelDecl, 3)
     );
 }
 
@@ -31,7 +31,7 @@ OperationMetadata BarrierChannelExtractor::GetOperationMetadata(CallExpr* callEx
 }
 std::string BarrierChannelExtractor::CreateDeclaration(const std::string& callName, const OperationMetadata& metadata)
 {
-    return this->CreateChannelDeclaration(callName, metadata, "SMI_BarrierChannel", "int count, int port, int root, SMI_Comm comm");
+    return this->CreateChannelDeclaration(callName, metadata, "SMI_BarrierChannel", "int count, int port, SMI_Comm comm");
 }
 std::string BarrierChannelExtractor::GetChannelFunctionName()
 {

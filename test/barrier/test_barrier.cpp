@@ -66,33 +66,31 @@ TEST(Barrier, Test)
     hlslib::ocl::Buffer<char, hlslib::ocl::Access::readWrite> check = context->MakeBuffer<char, hlslib::ocl::Access::readWrite>(1);
     hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_barrier");
     std::vector<int> message_lengths={1,128,1024,1000};
-    std::vector<int> roots={0,4,5};
+
     int runs=2;
-    for(int root:roots)    //consider different roots
+
+
+    for(int ml:message_lengths)     //consider different message lengths
     {
+        cl::Kernel cl_kernel = kernel.kernel();
+        cl_kernel.setArg(0,sizeof(cl_mem),&check.devicePtr());
+        cl_kernel.setArg(1,sizeof(int),&ml);
+        cl_kernel.setArg(2,sizeof(SMI_Comm),&comm);
 
-        for(int ml:message_lengths)     //consider different message lengths
+        for(int i=0;i<runs;i++)
         {
-            cl::Kernel cl_kernel = kernel.kernel();
-            cl_kernel.setArg(0,sizeof(cl_mem),&check.devicePtr());
-            cl_kernel.setArg(1,sizeof(int),&ml);
-            cl_kernel.setArg(2,sizeof(char),&root);
-            cl_kernel.setArg(3,sizeof(SMI_Comm),&comm);
+            if(my_rank==0)  //remove emulated channels
+                system("rm emulated_chan* 2> /dev/null;");
 
-            for(int i=0;i<runs;i++)
-            {
-                if(my_rank==0)  //remove emulated channels
-                    system("rm emulated_chan* 2> /dev/null;");
-
-                // run some_function() and compared with some_value
-                // but end the function if it exceeds 3 seconds
-                //source https://github.com/google/googletest/issues/348#issuecomment-492785854
-                ASSERT_DURATION_LE(TEST_TIMEOUT, {
-                  ASSERT_TRUE(runAndReturn(kernel,check));
-                });
-            }
+            // run some_function() and compared with some_value
+            // but end the function if it exceeds 3 seconds
+            //source https://github.com/google/googletest/issues/348#issuecomment-492785854
+            ASSERT_DURATION_LE(TEST_TIMEOUT, {
+                ASSERT_TRUE(runAndReturn(kernel,check));
+            });
         }
     }
+    
 }
 
 TEST(Barrier, Test2)
@@ -101,33 +99,31 @@ TEST(Barrier, Test2)
     hlslib::ocl::Buffer<char, hlslib::ocl::Access::readWrite> check = context->MakeBuffer<char, hlslib::ocl::Access::readWrite>(1);
     hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_barrier_2");
     std::vector<int> message_lengths={1,128,1024,1000};
-    std::vector<int> roots={0,4,5};
+
     int runs=2;
-    for(int root:roots)    //consider different roots
+
+
+    for(int ml:message_lengths)     //consider different message lengths
     {
+        cl::Kernel cl_kernel = kernel.kernel();
+        cl_kernel.setArg(0,sizeof(cl_mem),&check.devicePtr());
+        cl_kernel.setArg(1,sizeof(int),&ml);
+        cl_kernel.setArg(2,sizeof(SMI_Comm),&comm);
 
-        for(int ml:message_lengths)     //consider different message lengths
+        for(int i=0;i<runs;i++)
         {
-            cl::Kernel cl_kernel = kernel.kernel();
-            cl_kernel.setArg(0,sizeof(cl_mem),&check.devicePtr());
-            cl_kernel.setArg(1,sizeof(int),&ml);
-            cl_kernel.setArg(2,sizeof(char),&root);
-            cl_kernel.setArg(3,sizeof(SMI_Comm),&comm);
+            if(my_rank==0)  //remove emulated channels
+                system("rm emulated_chan* 2> /dev/null;");
 
-            for(int i=0;i<runs;i++)
-            {
-                if(my_rank==0)  //remove emulated channels
-                    system("rm emulated_chan* 2> /dev/null;");
-
-                // run some_function() and compared with some_value
-                // but end the function if it exceeds 3 seconds
-                //source https://github.com/google/googletest/issues/348#issuecomment-492785854
-                ASSERT_DURATION_LE(TEST_TIMEOUT, {
-                  ASSERT_TRUE(runAndReturn(kernel,check));
-                });
-            }
+            // run some_function() and compared with some_value
+            // but end the function if it exceeds 3 seconds
+            //source https://github.com/google/googletest/issues/348#issuecomment-492785854
+            ASSERT_DURATION_LE(TEST_TIMEOUT, {
+                ASSERT_TRUE(runAndReturn(kernel,check));
+            });
         }
     }
+    
 }
 
 
