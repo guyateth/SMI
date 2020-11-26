@@ -29,3 +29,18 @@ __kernel void test_barrier_2(__global char* mem, const int N,SMI_Comm comm)
 
     *mem=check;
 }
+
+__kernel void test_barrier_timeout(__global char* mem, const int N,SMI_Comm comm)
+{
+    char check=1;
+    
+
+    if (SMI_Comm_rank(comm) == 1){
+        printf("Here we dont enter the barrier.)
+        *mem=check;
+    } else {
+        SMI_BarrierChannel  __attribute__((register)) chan= SMI_Open_barrier_channel(N,2,comm);
+        // set the value to 42. This line should not be reached, if it is reached, the barrier failed
+        *mem=42;
+    }    
+}

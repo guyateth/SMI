@@ -40,6 +40,19 @@ SMI_Comm comm;
     } \
 }
 
+#define ASSERT_TEST_TIMES_OUT(secs, stmt) { \
+  std::promise<bool> completed; \
+  auto stmt_future = completed.get_future(); \
+  std::thread([&](std::promise<bool>& completed) { \
+    stmt; \
+    completed.set_value(true); \
+  }, std::ref(completed)).detach(); \
+  if(stmt_future.wait_for(std::chrono::seconds(secs)) == std::future_status::timeout){ \
+    GTEST_SUCCEED(); \
+    MPI_Finalize();\
+    } \
+}
+
 
 bool runAndReturn(hlslib::ocl::Kernel &kernel, hlslib::ocl::Buffer<char, hlslib::ocl::Access::readWrite> &check)
 {
@@ -119,6 +132,39 @@ TEST(Barrier, Test2)
             // but end the function if it exceeds 3 seconds
             //source https://github.com/google/googletest/issues/348#issuecomment-492785854
             ASSERT_DURATION_LE(TEST_TIMEOUT, {
+                ASSERT_TRUE(runAndReturn(kernel,check));
+            });
+        }
+    }
+    
+}
+
+TEST(Barrier, Test_Timeout)
+{
+    //with this test we evaluate the correctness of char messages transmission
+    hlslib::ocl::Buffer<char, hlslib::ocl::Access::readWrite> check = context->MakeBuffer<char, hlslib::ocl::Access::readWrite>(1);
+    hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_barrier_timeout");
+    std::vector<int> message_lengths={1};
+
+    int runs=2;
+
+
+    for(int ml:message_lengths)     //consider different message lengths
+    {
+        cl::Kernel cl_kernel = kernel.kernel();
+        cl_kernel.setArg(0,sizeof(cl_mem),&check.devicePtr());
+        cl_kernel.setArg(1,sizeof(int),&ml);
+        cl_kernel.setArg(2,sizeof(SMI_Comm),&comm);
+
+        for(int i=0;i<runs;i++)
+        {
+            if(my_rank==0)  //remove emulated channels
+                system("rm emulated_chan* 2> /dev/null;");
+
+            // run some_function() and compared with some_value
+            // but end the function if it exceeds 3 seconds
+            //source https://github.com/google/googletest/issues/348#issuecomment-492785854
+            ASSERT_TEST_TIMES_OUT(10, {
                 ASSERT_TRUE(runAndReturn(kernel,check));
             });
         }
