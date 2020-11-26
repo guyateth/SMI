@@ -3,7 +3,7 @@
     Test must be executed with 8 ranks
  */
 
-#define TEST_TIMEOUT 100
+#define TEST_TIMEOUT 50
 
 #include <gtest/gtest.h>
 #include <stdio.h>
@@ -65,7 +65,7 @@ TEST(Barrier, Test)
     //with this test we evaluate the correctness of char messages transmission
     hlslib::ocl::Buffer<char, hlslib::ocl::Access::readWrite> check = context->MakeBuffer<char, hlslib::ocl::Access::readWrite>(1);
     hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_barrier");
-    std::vector<int> message_lengths={1,128,1024,1000};
+    std::vector<int> message_lengths={1,128};
 
     int runs=2;
 

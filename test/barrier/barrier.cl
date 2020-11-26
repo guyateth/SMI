@@ -25,6 +25,7 @@ __kernel void test_barrier_2(__global char* mem, const int N,SMI_Comm comm)
     for(int i=0;i<N;i++)
     {
         SMI_Barrier(&chan);
+        print("Run %d \n", i);
     }
 
     *mem=check;
