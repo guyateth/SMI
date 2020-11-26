@@ -98,7 +98,7 @@ TEST(Barrier, Test2)
     //with this test we evaluate the correctness of char messages transmission
     hlslib::ocl::Buffer<char, hlslib::ocl::Access::readWrite> check = context->MakeBuffer<char, hlslib::ocl::Access::readWrite>(1);
     hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_barrier_2");
-    std::vector<int> message_lengths={1,128,1024,1000};
+    std::vector<int> message_lengths={1,64};
 
     int runs=2;
 
