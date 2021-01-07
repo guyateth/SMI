@@ -1,6 +1,6 @@
 /**
-	Broadcast test. A sequeuence of number is broadcasted.
-	Non-root ranks check whether the received number is correct
+	Barrier test. Test 1 is a simple barrier. Test 2 enters the barrier a number of times.
+    Test 3 enters the barrier on all but one ranks. Then we check whether we time out.
 */
 
 #include <smi.h>

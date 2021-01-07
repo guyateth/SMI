@@ -19,4 +19,5 @@
 #include "smi/gather.h"
 #include "smi/scatter.h"
 #include "smi/barrier.h"
+#include "smi/treecast.h"
 #endif // SMI_H

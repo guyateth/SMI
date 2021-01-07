@@ -55,7 +55,7 @@ SMI_Comm comm;
 
 bool runAndReturn(hlslib::ocl::Kernel &kernel, hlslib::ocl::Buffer<char, hlslib::ocl::Access::readWrite> &check)
 {
-    //only rank 0 and the recv rank start the app kernels
+
     MPI_Barrier(MPI_COMM_WORLD);
 
     kernel.ExecuteTask();
@@ -74,7 +74,7 @@ TEST(Barrier, MPIinit)
 
 TEST(Barrier, Test)
 {
-    //with this test we evaluate the correctness of char messages transmission
+    // with this test we evaluate the correctness of a simple, one use barrier
     hlslib::ocl::Buffer<char, hlslib::ocl::Access::readWrite> check = context->MakeBuffer<char, hlslib::ocl::Access::readWrite>(1);
     hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_barrier");
     std::vector<int> message_lengths={1,128};
@@ -107,7 +107,7 @@ TEST(Barrier, Test)
 
 TEST(Barrier, Test2)
 {
-    //with this test we evaluate the correctness of char messages transmission
+    // with this test we evaluate the correctness of a simple, multiple use barrier
     hlslib::ocl::Buffer<char, hlslib::ocl::Access::readWrite> check = context->MakeBuffer<char, hlslib::ocl::Access::readWrite>(1);
     hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_barrier_2");
     std::vector<int> message_lengths={1,64};
@@ -140,7 +140,8 @@ TEST(Barrier, Test2)
 
 TEST(Barrier, Test_Timeout)
 {
-    //with this test we evaluate the correctness of char messages transmission
+    // with this test we evaluate the correctness of a simple, barrier, and whether it acutally locks.
+    // One rank (rank 1) is not entering the barrier. Therefore, the test should time out.
     hlslib::ocl::Buffer<char, hlslib::ocl::Access::readWrite> check = context->MakeBuffer<char, hlslib::ocl::Access::readWrite>(1);
     hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_barrier_timeout");
     std::vector<int> message_lengths={1};
@@ -162,6 +163,7 @@ TEST(Barrier, Test_Timeout)
 
             // run some_function() and compared with some_value
             // but end the function if it exceeds 3 seconds
+            // The timeout function is altered in such a way, that a timeout counts as a success.
             //source https://github.com/google/googletest/issues/348#issuecomment-492785854
             ASSERT_TEST_TIMES_OUT(10, {
                 ASSERT_TRUE(runAndReturn(kernel,check));

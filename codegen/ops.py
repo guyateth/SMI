@@ -107,6 +107,16 @@ class Broadcast(SmiOperation):
         }
 
 
+class Treecast(SmiOperation):
+    def channel_usage(self, p2p_rendezvous: bool) -> Set[str]:
+        return {
+            KEY_CKS_DATA,
+            KEY_CKS_CONTROL,
+            KEY_CKR_DATA,
+            KEY_CKR_CONTROL
+        }
+
+
 class Reduce(SmiOperation):
     """
     Maps data type to SHIFT_REG.
