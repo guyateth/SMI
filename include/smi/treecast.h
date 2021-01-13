@@ -26,6 +26,8 @@ typedef struct __attribute__((packed)) __attribute__((aligned(64))){
     unsigned int message_size;          //given in number of data elements
     bool init;                          //true at the beginning, used by the receivers for synchronization
     bool waiting;
+    char child_one;
+    char child_two;
 }SMI_TreecastChannel;
 
 /**
