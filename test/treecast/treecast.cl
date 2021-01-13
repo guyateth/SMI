@@ -84,7 +84,7 @@ __kernel void test_short(__global char* mem, const int N, char root,SMI_Comm com
 __kernel void test_int_ad(__global char* mem, const int N, char root,SMI_Comm comm)
 {
     char check=1;
-    SMI_TreecastChannel  __attribute__((register)) chan= SMI_Open_treecast_channel(N, SMI_INT,5, root,comm,1);
+    SMI_TreecastChannel  __attribute__((register)) chan= SMI_Open_treecast_channel_ad(N, SMI_INT,5, root,comm,1);
     for(int i=0;i<N;i++)
     {
 
@@ -99,7 +99,7 @@ __kernel void test_float_ad(__global char* mem, const int N, char root,SMI_Comm 
 {
     char check=1;
     const float offset=0.1f;
-    SMI_TreecastChannel  __attribute__((register)) chan= SMI_Open_treecast_channel(N, SMI_FLOAT,6, root,comm,2);
+    SMI_TreecastChannel  __attribute__((register)) chan= SMI_Open_treecast_channel_ad(N, SMI_FLOAT,6, root,comm,2);
     for(int i=0;i<N;i++)
     {
 
