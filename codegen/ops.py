@@ -232,4 +232,5 @@ OP_MAPPING = {
     "scatter": Scatter,
     "gather": Gather,
     "barrier": Barrier,
+    "treecast": Treecast,
 }
