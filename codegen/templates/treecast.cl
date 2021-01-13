@@ -33,6 +33,7 @@ void {{ utils.impl_name_port_type("SMI_Treecast", op) }}(SMI_TreecastChannel* ch
         }
         if (chan->child_two != -1) 
         {
+            mem_fence(CLK_CHANNEL_MEM_FENCE);
             // may do sanity checks
             SMI_Network_message mess = read_channel_intel({{ op.get_channel("ckr_control") }});
         }
@@ -86,6 +87,7 @@ void {{ utils.impl_name_port_type("SMI_Treecast", op) }}(SMI_TreecastChannel* ch
                 write_channel_intel({{ op.get_channel("cks_data") }}, chan->net_2);
             }
             if (chan->child_two != -1){
+                mem_fence(CLK_CHANNEL_MEM_FENCE);
                 SET_HEADER_DST(chan->net_2.header, chan->child_two);
                 write_channel_intel({{ op.get_channel("cks_data") }}, chan->net_2);
             }
