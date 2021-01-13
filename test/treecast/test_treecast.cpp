@@ -3,7 +3,7 @@
     Test must be executed with 8 ranks
  */
 
-#define TEST_TIMEOUT 50
+#define TEST_TIMEOUT 20
 
 #include <gtest/gtest.h>
 #include <stdio.h>
@@ -140,7 +140,7 @@ TEST(Treecast, IntegerMessages)
     hlslib::ocl::Buffer<char, hlslib::ocl::Access::readWrite> check = context->MakeBuffer<char, hlslib::ocl::Access::readWrite>(1);
     hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_int");
 
-    std::vector<int> message_lengths={1,128,1024};
+    std::vector<int> message_lengths={1,128,256};
     std::vector<int> roots={0,5};
     int runs=2;
     for(int root:roots)    //consider different roots
