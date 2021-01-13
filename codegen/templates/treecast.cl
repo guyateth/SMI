@@ -118,7 +118,7 @@ void {{ utils.impl_name_port_type("SMI_Treecast", op) }}(SMI_TreecastChannel* ch
 {%- macro smi_treecast_channel(program, op) -%}
 SMI_TreecastChannel {{ utils.impl_name_port_type("SMI_Open_treecast_channel", op) }}(int count, SMI_Datatype data_type, int port, int root, SMI_Comm comm)
 {
-    SMI_BChannel chan;
+    SMI_TreecastChannel chan;
     // setup channel descriptor
     chan.message_size = count;
     chan.data_type = data_type;
