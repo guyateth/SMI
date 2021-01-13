@@ -3,7 +3,7 @@
     Test must be executed with 8 ranks
  */
 
-#define TEST_TIMEOUT 10
+#define TEST_TIMEOUT 50
 
 #include <gtest/gtest.h>
 #include <stdio.h>

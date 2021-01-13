@@ -17,8 +17,9 @@ void {{ utils.impl_name_port_type("SMI_Treecast", op) }}(SMI_TreecastChannel* ch
     // NEW AND SHINY
 
 
-    if(chan->init)  //send ready-to-receive to the parent
+    if(chan->init && chan->my_rank != chan->root_rank)  //send ready-to-receive to the parent
     {
+        print("Sending init")
         write_channel_intel({{ op.get_channel("cks_control") }}, chan->net);
         chan->init=false;
     }
@@ -133,9 +134,9 @@ SMI_TreecastChannel {{ utils.impl_name_port_type("SMI_Open_treecast_channel", op
 
 
     SET_HEADER_OP(chan.net.header, SMI_SYNCH);           // used to signal to the support kernel that a new broadcast has begun
-    SET_HEADER_SRC(chan.net.header, chan.root_rank);
+    SET_HEADER_SRC(chan.net.header, chan.my_rank);
     SET_HEADER_PORT(chan.net.header, chan.port);         // used by destination
-    SET_HEADER_DST(chan.net.header, chan.my_rank);       // since we offload to support kernel
+           // since we offload to support kernel
     
 
     // now we generate the next element, as well as the parent element
@@ -159,7 +160,7 @@ SMI_TreecastChannel {{ utils.impl_name_port_type("SMI_Open_treecast_channel", op
         if (chan.child_two >= chan.num_rank) chan.child_two = -1;
     } else if (chan.my_rank == 0) {
         // special case for ranks where rank is == 0, but they arent the root
-        // chan.my_parent = ((chan.root_rank + 1) / 2) - 1;
+        chan.my_parent = ((chan.root_rank + 1) / 2) - 1;
 
         chan.child_one = ((chan.root_rank * 2) + 1);
         // remove child if out of bounds
@@ -182,6 +183,8 @@ SMI_TreecastChannel {{ utils.impl_name_port_type("SMI_Open_treecast_channel", op
         // if the child would be the root, replace with 0
         if (chan.child_two == chan.root_rank) chan.child_two = 0;
     }
+
+    SET_HEADER_DST(chan.net.header, chan.my_parent);
     
     chan.processed_elements = 0;
     chan.packet_element_id = 0;
