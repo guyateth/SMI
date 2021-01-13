@@ -138,6 +138,7 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
             {
                 SET_HEADER_DST(mess_data.header, my_rank);
                 SET_HEADER_PORT(mess_data.header, {{ op.logical_port }});
+                write_channel_intel({{ op.get_channel("cks_data") }}, mess_data);
                 sent_one = sent_two = false;
                 stage = 6;
             }
