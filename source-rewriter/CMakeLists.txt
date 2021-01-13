@@ -14,6 +14,7 @@ set(SOURCES
         src/ops/gather.cpp
         src/ops/reduce.cpp
         src/ops/barrier.cpp
+        src/ops/treecast.cpp
 )
 
 add_executable(rewriter ${SOURCES})
