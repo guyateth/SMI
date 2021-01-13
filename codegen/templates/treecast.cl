@@ -19,7 +19,7 @@ void {{ utils.impl_name_port_type("SMI_Treecast", op) }}(SMI_TreecastChannel* ch
 
     if(chan->init && chan->my_rank != chan->root_rank)  //send ready-to-receive to the parent
     {
-        print("Sending init from %d to %d\n", chan->my_rank, chan->root_rank);
+        printf("Sending init from %d to %d\n", chan->my_rank, chan->root_rank);
         write_channel_intel({{ op.get_channel("cks_control") }}, chan->net);
         chan->init=false;
     }
