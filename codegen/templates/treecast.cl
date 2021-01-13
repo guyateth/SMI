@@ -78,6 +78,7 @@ void {{ utils.impl_name_port_type("SMI_Treecast", op) }}(SMI_TreecastChannel* ch
         if (chan->packet_element_id_rcv == 0)
         {
             chan->net_2 = read_channel_intel({{ op.get_channel("ckr_data") }});
+            mem_fence(CLK_CHANNEL_MEM_FENCE);
             // send two messages to my children
             if (chan->child_one != -1){
                 SET_HEADER_SRC(chan->net_2.header, chan->my_rank);
