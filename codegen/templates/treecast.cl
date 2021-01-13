@@ -23,9 +23,8 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
         if (stage == 0) // read from the application
         {
             mess = read_channel_intel({{ op.get_channel("treecast_send") }});
-            printf("read mess\n");
 
-            SET_HEADER_OP(mess.header, SMI_BROADCAST);
+            
             my_rank = GET_HEADER_SRC(mess.header);
             child_one = mess.data[0];
             child_two = mess.data[1];
@@ -37,7 +36,7 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
                 if (child_two != -1) num_requests ++;
                 received_request = num_requests;
             }
-
+            SET_HEADER_OP(mess.header, SMI_BROADCAST);
             if (my_parent == -1) // i am the root
             {
                 stage = 1;
@@ -94,7 +93,7 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
                 SET_HEADER_DST(mess_data.header, child_one);
                 SET_HEADER_PORT(mess_data.header, {{ op.logical_port }});
                 write_channel_intel({{ op.get_channel("cks_data") }}, mess_data);
-                printf("ROOT SENT CH1; %d %d %d %d", my_rank, my_parent, child_one, child_two);
+                printf("ROOT SENT CH1; %d %d %d %d\n", my_rank, my_parent, child_one, child_two);
                 sent_one = true;
             }
             else if (!sent_two && child_two != -1) // this elseif makes sure only one packet is sent per loop iteration
@@ -102,7 +101,7 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
                 SET_HEADER_DST(mess_data.header, child_two);
                 SET_HEADER_PORT(mess_data.header, {{ op.logical_port }});
                 write_channel_intel({{ op.get_channel("cks_data") }}, mess_data);
-                printf("ROOT SENT CH2; %d %d %d %d", my_rank, my_parent, child_one, child_two);
+                printf("ROOT SENT CH2; %d %d %d %d\n", my_rank, my_parent, child_one, child_two);
                 sent_two = true;
             }
             else
@@ -115,7 +114,7 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
         else if (stage == 5) // wait for new data
         {
             mess_data = read_channel_intel({{ op.get_channel("treecast_data") }});
-            printf("GOT FROM APP; %d %d %d %d", my_rank, my_parent, child_one, child_two);
+            printf("GOT FROM APP; %d %d %d %d\n", my_rank, my_parent, child_one, child_two);
             SET_HEADER_OP(mess_data.header, SMI_BROADCAST);
             stage = 4;
         }
@@ -123,7 +122,7 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
         else if (stage == 6) // wait for new data
         {
             mess_data = read_channel_intel({{ op.get_channel("ckr_data") }});
-            printf("GOT FROM PARENT; %d %d %d %d", my_rank, my_parent, child_one, child_two);
+            printf("GOT FROM PARENT; %d %d %d %d\n", my_rank, my_parent, child_one, child_two);
             SET_HEADER_OP(mess_data.header, SMI_BROADCAST);
             stage = 7;
         }
@@ -166,11 +165,9 @@ void {{ utils.impl_name_port_type("SMI_Treecast", op) }}(SMI_TreecastChannel* ch
     {
         if(chan->init)  // send setup to support kern
         {
-            printf("setting data\n");
             chan->net.data[0] = chan->child_one;
             chan->net.data[1] = chan->child_two;
             chan->net.data[2] = chan->my_parent;
-            printf("sending... \n");
             write_channel_intel({{ op.get_channel("treecast_send") }}, chan->net);
             chan->init=false;
         }
