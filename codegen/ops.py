@@ -11,6 +11,9 @@ KEY_SCATTER = "scatter"
 KEY_GATHER = "gather"
 KEY_BARRIER_LOCK = "barrier_lock"
 KEY_BARRIER_LIFT = "barrier_lift"
+KEY_TREECAST_SEND = "treecast_send"
+KEY_TREECAST_RECV = "treecast_recv"
+KEY_TREECAST_DATA = "treecast_data"
 
 DATA_TYPE_SIZE = {
     "char":     1,
@@ -53,7 +56,10 @@ class SmiOperation:
             "scatter": 1,
             "gather": 1,
             "barrier_lock": 1,
-            "barrier_lift": 1
+            "barrier_lift": 1,
+            "treecast_send": 1,
+            "treecast_recv": 1,
+            "treecast_data": 1
         }
         return mapping[channel]
 
@@ -113,7 +119,10 @@ class Treecast(SmiOperation):
             KEY_CKS_DATA,
             KEY_CKS_CONTROL,
             KEY_CKR_DATA,
-            KEY_CKR_CONTROL
+            KEY_CKR_CONTROL,
+            KEY_TREECAST_SEND,
+            KEY_TREECAST_RECV,
+            KEY_TREECAST_DATA
         }
 
 
