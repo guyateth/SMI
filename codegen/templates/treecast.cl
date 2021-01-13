@@ -141,11 +141,11 @@ SMI_TreecastChannel {{ utils.impl_name_port_type("SMI_Open_treecast_channel", op
     // now we generate the next element, as well as the parent element
     // this builds the tree structure
     // we build a standard tree, and switch 0 and the root element (here, root = 1)
-    //         0                 1
-    //        / \               / \ 
-    //       1   2             0   2
-    //      / \ / \           / \ / \ 
-    //     3  4 5  6         3  4 5  6 
+    //         0                 1       |
+    //        / \               / \      |
+    //       1   2             0   2     |
+    //      / \ / \           / \ / \    |
+    //     3  4 5  6         3  4 5  6   |
     //
     if (chan.root_rank == chan.my_rank){
         // i am the root
@@ -157,7 +157,7 @@ SMI_TreecastChannel {{ utils.impl_name_port_type("SMI_Open_treecast_channel", op
         chan.child_two = 2;
         // remove child if out of bounds
         if (chan.child_two >= chan.num_rank) chan.child_two = -1;
-    } else if (chan.my_rank == 0 {
+    } else if (chan.my_rank == 0) {
         // special case for ranks where rank is == 0, but they arent the root
         chan.my_parent = ((chan.root_rank + 1) / 2) - 1;
 
