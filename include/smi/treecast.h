@@ -64,5 +64,5 @@ SMI_TreecastChannel SMI_Open_treecast_channel_ad(int count, SMI_Datatype data_ty
  * @param data pointer to the data element: on the root rank is the element that will be transmitted,
     on the non-root rank will be the received element
  */
-void SMI_Treecast(SMI_TreecastChannel *chan);
+void SMI_Treecast(SMI_TreecastChannel *chan, void* data);
 #endif // BARRIER_H
