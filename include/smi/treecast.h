@@ -33,6 +33,7 @@ typedef struct __attribute__((packed)) __attribute__((aligned(64))){
     bool waiting;
     char child_one;
     char child_two;
+    char my_parent;
 }SMI_TreecastChannel;
 
 /**
