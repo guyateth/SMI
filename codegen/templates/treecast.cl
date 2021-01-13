@@ -36,7 +36,7 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
                 if (child_two != -1) num_requests ++;
                 received_request = num_requests;
             }
-            SET_HEADER_OP(mess.header, SMI_BROADCAST);
+            
             if (my_parent == -1) // i am the root
             {
                 stage = 1;
