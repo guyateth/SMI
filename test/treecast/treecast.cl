@@ -20,6 +20,7 @@ __kernel void test_int(__global char* mem, const int N, char root,SMI_Comm comm)
     *mem=check;
 }
 
+/**
 __kernel void test_float(__global char* mem, const int N, char root,SMI_Comm comm)
 {
     char check=1;
@@ -109,3 +110,4 @@ __kernel void test_float_ad(__global char* mem, const int N, char root,SMI_Comm 
     }
     *mem=check;
 }
+*/

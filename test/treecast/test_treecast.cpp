@@ -59,7 +59,7 @@ TEST(Treecast, MPIinit)
 {
     ASSERT_EQ(rank_count,8);
 }
-
+/*
 TEST(Treecast, CharMessages)
 {
     //with this test we evaluate the correctness of char messages transmission
@@ -132,7 +132,7 @@ TEST(Treecast, ShortMessages)
         }
     }
 }
-
+*/
 TEST(Treecast, IntegerMessages)
 {
     //with this test we evaluate the correctness of integer messages transmission
@@ -170,7 +170,7 @@ TEST(Treecast, IntegerMessages)
         }
     }
 }
-
+/*
 TEST(Treecast, FloatMessages)
 {
     //with this test we evaluate the correctness of integer messages transmission
@@ -323,7 +323,7 @@ TEST(Treecast, FloatMessagesAD)
         }
     }
 }
-
+*/
 int main(int argc, char *argv[])
 {
 
