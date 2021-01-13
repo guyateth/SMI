@@ -17,13 +17,18 @@
 
 typedef struct __attribute__((packed)) __attribute__((aligned(64))){
     SMI_Network_message net;            //buffered network message
-    SMI_Network_message net_2;          //buffered network message: used for the receiving side
     char root_rank;
     char my_rank;                       //These two are essentially the Communicator
     char num_rank;
     char port;                          //Port number
-    char packet_element_id_rcv;         //used by the receivers
     unsigned int message_size;          //given in number of data elements
+    unsigned int processed_elements;    //how many data elements we have sent/received
+    char packet_element_id;             //given a packet, the id of the element that we are currently processing (from 0 to the data elements per packet)
+    SMI_Datatype data_type;             //type of message
+    SMI_Network_message net_2;          //buffered network message: used for the receiving side
+    char size_of_type;                  //size of data type
+    char elements_per_packet;           //number of data elements per packet
+    char packet_element_id_rcv;         //used by the receivers
     bool init;                          //true at the beginning, used by the receivers for synchronization
     bool waiting;
     char child_one;
