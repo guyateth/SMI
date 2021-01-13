@@ -18,8 +18,6 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
     SMI_Network_message mess_data;
     char init;
 
-    printf("starting kern\n");
-
     while (true)
     {
         if (stage == 0) // read from the application
@@ -272,7 +270,7 @@ SMI_TreecastChannel {{ utils.impl_name_port_type("SMI_Open_treecast_channel", op
     if (chan.root_rank == chan.my_rank){
         // i am the root
         SET_HEADER_NUM_ELEMS(chan.net.header, 0);            // at the beginning no data
-
+        chan.my_parent = -1;
         chan.child_one = 1;
         // remove child if out of bounds
         if (chan.child_one >= chan.num_rank) chan.child_one = -1;
@@ -291,7 +289,7 @@ SMI_TreecastChannel {{ utils.impl_name_port_type("SMI_Open_treecast_channel", op
         if (chan.child_two >= chan.num_rank) chan.child_two = -1;
     } else {
         // i am not the root
-        chan.my_parent = -1;
+        chan.my_parent = ((chan.my_rank + 1) / 2) - 1;
 
         chan.child_one = ((chan.my_rank * 2) + 1);
         // remove child if out of bounds
