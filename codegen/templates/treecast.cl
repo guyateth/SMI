@@ -16,7 +16,7 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
     char num_requests = 0;
     SMI_Network_message mess;
     SMI_Network_message mess_data;
-    char init 
+    char init;
 
     while (true)
     {
