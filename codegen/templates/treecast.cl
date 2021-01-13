@@ -11,7 +11,7 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
 {%- endmacro %}
 
 {%- macro smi_treecast_impl(program, op) -%}
-void {{ utils.impl_name_port_type("SMI_Treecast", op) }}(SMI_BChannel* chan, void* data)
+void {{ utils.impl_name_port_type("SMI_Treecast", op) }}(SMI_TreecastChannel* chan, void* data)
 {
     char* conv = (char*)data;
     // NEW AND SHINY
@@ -116,7 +116,7 @@ void {{ utils.impl_name_port_type("SMI_Treecast", op) }}(SMI_BChannel* chan, voi
 {%- endmacro %}
 
 {%- macro smi_treecast_channel(program, op) -%}
-SMI_BChannel {{ utils.impl_name_port_type("SMI_Open_treecast_channel", op) }}(int count, SMI_Datatype data_type, int port, int root, SMI_Comm comm)
+SMI_TreecastChannel {{ utils.impl_name_port_type("SMI_Open_treecast_channel", op) }}(int count, SMI_Datatype data_type, int port, int root, SMI_Comm comm)
 {
     SMI_BChannel chan;
     // setup channel descriptor
