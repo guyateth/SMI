@@ -60,6 +60,7 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
         {   
             SET_HEADER_DST(mess.header, my_parent);
             SET_HEADER_PORT(mess.header, {{ op.logical_port }});
+            SET_HEADER_OP(mess_data.header, SMI_SYNCH);
             write_channel_intel({{ op.get_channel("cks_control") }}, mess);
             printf("SENT RR; %d %d %d %d\n", my_rank, my_parent, child_one, child_two);
             stage = 3;
@@ -134,6 +135,7 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
                 SET_HEADER_DST(mess_data.header, child_one);
                 SET_HEADER_PORT(mess_data.header, {{ op.logical_port }});
                 write_channel_intel({{ op.get_channel("cks_data") }}, mess_data);
+                printf("SENT TO CH1; %d %d %d %d\n", my_rank, my_parent, child_one, child_two);
                 sent_one = true;
             }
             else if (!sent_two && child_two != -1) // this elseif makes sure only one packet is sent per loop iteration
@@ -141,6 +143,7 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
                 SET_HEADER_DST(mess_data.header, child_two);
                 SET_HEADER_PORT(mess_data.header, {{ op.logical_port }});
                 write_channel_intel({{ op.get_channel("cks_data") }}, mess_data);
+                printf("SENT TO CH2; %d %d %d %d\n", my_rank, my_parent, child_one, child_two);
                 sent_two = true;
             }
             else // we make sure to send the data to the main application
