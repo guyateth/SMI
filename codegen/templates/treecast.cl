@@ -19,7 +19,7 @@ void {{ utils.impl_name_port_type("SMI_Treecast", op) }}(SMI_TreecastChannel* ch
 
     if(chan->init && chan->my_rank != chan->root_rank)  //send ready-to-receive to the parent
     {
-        printf("Sending init from %d to %d\n", chan->my_rank, GET_HEADER_DST(chan->net.header, {{ op.logical_port }}));;
+        printf("Sending init from %d to %d\n", chan->my_rank, chan->my_parent);
         write_channel_intel({{ op.get_channel("cks_control") }}, chan->net);
         chan->init=false;
     }
@@ -30,12 +30,14 @@ void {{ utils.impl_name_port_type("SMI_Treecast", op) }}(SMI_TreecastChannel* ch
         if (chan->child_one != -1) 
         {
             // may do sanity checks
-            read_channel_intel({{ op.get_channel("ckr_control") }});
+            SMI_Network_message mess = read_channel_intel({{ op.get_channel("ckr_control") }});
+            printf("Got init1 at %d from %d\n", chan->my_rank, GET_HEADER_SRC(mess.header));
         }
         if (chan->child_two != -1) 
         {
             // may do sanity checks
-            read_channel_intel({{ op.get_channel("ckr_control") }});
+            SMI_Network_message mess = read_channel_intel({{ op.get_channel("ckr_control") }});
+            printf("Got init2 at %d from %d\n", chan->my_rank, GET_HEADER_SRC(mess.header));
         }
         
         chan->waiting=false;
@@ -66,10 +68,12 @@ void {{ utils.impl_name_port_type("SMI_Treecast", op) }}(SMI_TreecastChannel* ch
             if (chan->child_one != -1){
                 SET_HEADER_SRC(chan->net_2.header, chan->my_rank);
                 SET_HEADER_DST(chan->net_2.header, chan->child_one);
+                printf("Sending pack (root) from %d to %d\n", chan->my_rank, chan->child_one);
                 write_channel_intel({{ op.get_channel("cks_data") }}, chan->net_2);
             }
             if (chan->child_two != -1){
-                SET_HEADER_DST(chan->net_2.header, chan->child_one);
+                SET_HEADER_DST(chan->net_2.header, chan->child_two);
+                printf("Sending pack (root 2) from %d to %d\n", chan->my_rank, chan->child_two);
                 write_channel_intel({{ op.get_channel("cks_data") }}, chan->net_2);
             }
         }
@@ -83,10 +87,12 @@ void {{ utils.impl_name_port_type("SMI_Treecast", op) }}(SMI_TreecastChannel* ch
             if (chan->child_one != -1){
                 SET_HEADER_SRC(chan->net_2.header, chan->my_rank);
                 SET_HEADER_DST(chan->net_2.header, chan->child_one);
+                printf("Sending pack (nonroot) from %d to %d\n", chan->my_rank, chan->child_one);
                 write_channel_intel({{ op.get_channel("cks_data") }}, chan->net_2);
             }
             if (chan->child_two != -1){
-                SET_HEADER_DST(chan->net_2.header, chan->child_one);
+                SET_HEADER_DST(chan->net_2.header, chan->child_two);
+                printf("Sending pack (nonroot) from %d to %d\n", chan->my_rank, chan->child_two);
                 write_channel_intel({{ op.get_channel("cks_data") }}, chan->net_2);
             }
         }
