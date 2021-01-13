@@ -150,7 +150,7 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
             {
                 SET_HEADER_DST(mess_data.header, my_rank);
                 SET_HEADER_PORT(mess_data.header, {{ op.logical_port }});
-                write_channel_intel({{ op.get_channel("treecast_recv") }}, mess_data);
+                write_channel_intel({{ op.get_channel("cks_data") }}, mess_data);
                 sent_one = sent_two = false;
                 stage = 6;
             }
@@ -211,7 +211,8 @@ void {{ utils.impl_name_port_type("SMI_Treecast", op) }}(SMI_TreecastChannel* ch
 
         if (chan->packet_element_id_rcv == 0)
         {
-            chan->net_2 = read_channel_intel({{ op.get_channel("treecast_recv") }});
+            chan->net_2 = read_channel_intel({{ op.get_channel("cks_data") }});
+            printf("Got message at %d\n", chan->my_rank);
         }
 
         //Copy data from network message. This is done explicitely to avoid internal compiler errors.
