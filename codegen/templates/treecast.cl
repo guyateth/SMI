@@ -45,12 +45,12 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
             if (my_parent == -1) // i am the root
             {
                 stage = 3;
-                //printf("END OF STAGE 0 ROOT; %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, num_requests);
+                printf("END OF STAGE 0 ROOT; %d %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, num_requests, total_elems);
             }
             else // i am not the root
             {
                 stage = 2;
-                //printf("END OF STAGE 0 NONR; %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, num_requests);
+                printf("END OF STAGE 0 NONROOT; %d %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, num_requests, total_elems);
             }
 
         }
@@ -69,11 +69,12 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
             {
                 //printf("WAITING RR; %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, received_request);
                 SMI_Network_message req = read_channel_intel({{ op.get_channel("ckr_control") }});
-                printf("GOT RR; %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, received_request);
+                //printf("GOT RR; %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, received_request);
                 received_request--;
             }
             else 
             {
+                printf("ALL CHILDREN READY ON RANK %d \n", my_rank);
                 if (my_parent == -1) // i am the root
                 {
                     stage = 5;
