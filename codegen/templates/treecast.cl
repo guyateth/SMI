@@ -181,7 +181,7 @@ void {{ utils.impl_name_port_type("SMI_Treecast", op) }}(SMI_TreecastChannel* ch
             chan->net.data[1] = chan->child_two;
             chan->net.data[2] = chan->my_parent;
             int* num_req_place = ((int*) chan->net.data) + 1;
-            num_req_place* = chan->message_size;
+            *num_req_place = chan->message_size;
             write_channel_intel({{ op.get_channel("treecast_send") }}, chan->net);
             chan->init=false;
         }
@@ -217,7 +217,7 @@ void {{ utils.impl_name_port_type("SMI_Treecast", op) }}(SMI_TreecastChannel* ch
             chan->net.data[1] = chan->child_two;
             chan->net.data[2] = chan->my_parent;
             int* num_req_place = ((int*) chan->net.data) + 1;
-            num_req_place* = chan->message_size;
+            *num_req_place = chan->message_size;
             
             write_channel_intel({{ op.get_channel("treecast_send") }}, chan->net);
             chan->init=false;
