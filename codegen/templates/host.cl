@@ -34,7 +34,7 @@ SMI_Comm SmiInit_{{ name }}(
     {%- endmacro %}
 
     {{ generate_collective_kernels("broadcast", "smi_kernel_bcast") }}
-    {{ generate_collective_kernels("treecast", "smi_kernel_bcast") }}
+
     {{ generate_collective_kernels("reduce", "smi_kernel_reduce") }}
     {{ generate_collective_kernels("scatter", "smi_kernel_scatter") }}
     {{ generate_collective_kernels("gather", "smi_kernel_gather") }}
@@ -92,7 +92,7 @@ SMI_Comm SmiInit_{{ name }}(
     {% endfor %}
     {%- endmacro %}
     {{ setup_collective_kernels("broadcast") }}
-    {{ setup_collective_kernels("treecast") }}
+    
     {{ setup_collective_kernels("reduce") }}
     {{ setup_collective_kernels("scatter") }}
     {{ setup_collective_kernels("gather") }}
