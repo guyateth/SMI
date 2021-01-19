@@ -114,6 +114,7 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
         else if (stage == 5) // wait for new data
         {
             if (remaining_elems <= 0) {
+                printf("EOT IN ROOT \n");
                 stage = 0;
             } else {
                 mess_data = read_channel_intel({{ op.get_channel("treecast_data") }});
@@ -128,6 +129,7 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
         else if (stage == 6) // wait for new data
         {
             if (remaining_elems <= 0) {
+                printf("EOT IN CHILD %d \n", my_rank);
                 stage = 0;
             } else {
                 mess_data = read_channel_intel({{ op.get_channel("ckr_data") }});
