@@ -32,7 +32,7 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
             child_two = mess.data[1];
             my_parent = mess.data[2];
 
-            total_elems = * (((int) mess.data) + 1);
+            total_elems = * (((int*) mess.data) + 1);
             remaining_elems = total_elems;
 
             if (GET_HEADER_OP(mess.header) == SMI_SYNCH)   // beginning of a treecast
@@ -180,7 +180,7 @@ void {{ utils.impl_name_port_type("SMI_Treecast", op) }}(SMI_TreecastChannel* ch
             chan->net.data[0] = chan->child_one;
             chan->net.data[1] = chan->child_two;
             chan->net.data[2] = chan->my_parent;
-            int* num_req_place = ((int) chan->net.data) + 1;
+            int* num_req_place = ((int*) chan->net.data) + 1;
             num_req_place* = chan->message_size;
             write_channel_intel({{ op.get_channel("treecast_send") }}, chan->net);
             chan->init=false;
