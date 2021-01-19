@@ -118,7 +118,7 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
             } else {
                 mess_data = read_channel_intel({{ op.get_channel("treecast_data") }});
                 remaining_elems -= GET_HEADER_NUM_ELEMS(mess_data.header);
-                //printf("GOT FROM APP; %d %d %d %d\n", my_rank, my_parent, child_one, child_two);
+                printf("GOT FROM APP; %d %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, GET_HEADER_NUM_ELEMS(mess_data.header), remaining_elems);
                 SET_HEADER_OP(mess_data.header, SMI_BROADCAST);
                 stage = 4;
             }
