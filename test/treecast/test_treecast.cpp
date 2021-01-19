@@ -143,6 +143,7 @@ TEST(Treecast, IntegerMessages)
     std::vector<int> message_lengths={1,128,256};
     std::vector<int> roots={0,5};
     int runs=2;
+    int j = 0;
     for(int root:roots)    //consider different roots
     {
 
@@ -166,6 +167,7 @@ TEST(Treecast, IntegerMessages)
                 ASSERT_DURATION_LE(TEST_TIMEOUT, {
                   ASSERT_TRUE(runAndReturn(kernel,check));
                 });
+                printf("AFTER ITERATION %d\n", j++);
             }
         }
     }
