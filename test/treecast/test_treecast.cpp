@@ -167,7 +167,7 @@ TEST(Treecast, IntegerMessages)
                 ASSERT_DURATION_LE(TEST_TIMEOUT, {
                   ASSERT_TRUE(runAndReturn(kernel,check));
                 });
-                printf("AFTER ITERATION %d\n", j++);
+                //printf("AFTER ITERATION %d\n", j++);
             }
         }
     }
