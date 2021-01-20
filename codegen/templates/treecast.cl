@@ -280,6 +280,7 @@ SMI_TreecastChannel {{ utils.impl_name_port_type("SMI_Open_treecast_channel", op
     } else {
         // i am not the root
         chan.my_parent = ((chan.my_rank + 1) / 2) - 1;
+        if (chan.my_parent == 0 && chan.root_rank != 0) chan.my_parent = chan.root_rank;
 
         chan.child_one = ((chan.my_rank * 2) + 1);
         // remove child if out of bounds
