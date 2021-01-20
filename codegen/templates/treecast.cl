@@ -267,6 +267,9 @@ SMI_TreecastChannel {{ utils.impl_name_port_type("SMI_Open_treecast_channel", op
         chan.child_two = 2;
         // remove child if out of bounds
         if (chan.child_two >= chan.num_rank) chan.child_two = -1;
+        // these two special cases are hardcoded
+        if (chan.root_rank == 1) chan.child_one = 0;
+        if (chan.root_rank == 2) chan.child_two = 0;
     } else if (chan.my_rank == 0) {
         // special case for ranks where rank is == 0, but they arent the root
         chan.my_parent = ((chan.root_rank + 1) / 2) - 1;
