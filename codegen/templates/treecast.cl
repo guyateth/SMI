@@ -47,26 +47,26 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
             {
                 //
                 stage = 2;
-                //printf("END OF STAGE 0 ROOT; %d %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, num_requests, total_elems);
+                printf("END OF STAGE 0 ROOT; %d %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, num_requests, total_elems);
             }
             else // i am not the root
             {
                 stage = 2;
-                //printf("END OF STAGE 0 NONROOT; %d %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, num_requests, total_elems);
+                printf("END OF STAGE 0 NONROOT; %d %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, num_requests, total_elems);
             }
         }
         else if (stage == 2) // wait for readies from all children (STAGE = WAIT_CHILDREN)
         {
             if (received_request != 0) // we wait for pending requests
             {
-                //printf("WAITING RR; %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, received_request);
+                printf("WAITING RR; %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, received_request);
                 SMI_Network_message req = read_channel_intel({{ op.get_channel("ckr_control") }});
                 //printf("GOT RR; %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, received_request);
                 received_request--;
             }
             else 
             {
-                //printf("ALL CHILDREN READY ON RANK %d \n", my_rank);
+                printf("ALL CHILDREN READY ON RANK %d \n", my_rank);
                 if (my_parent == -1) // i am the root
                 {
                     stage = 5;
@@ -83,7 +83,7 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
             SET_HEADER_PORT(mess.header, {{ op.logical_port }});
             SET_HEADER_OP(mess_data.header, SMI_SYNCH);
             write_channel_intel({{ op.get_channel("cks_control") }}, mess);
-            //printf("SENT RR; %d %d\n", my_rank, my_parent);
+            printf("SENT RR; %d %d\n", my_rank, my_parent);
             stage = 6;
         }
         else if (stage == 4) // send data to children (STAGE = ROOT_SEND)
@@ -129,7 +129,7 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
             } else {
                 mess_data = read_channel_intel({{ op.get_channel("treecast_data") }});
                 remaining_elems -= GET_HEADER_NUM_ELEMS(mess_data.header);
-                //printf("GOT FROM APP; %d %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, GET_HEADER_NUM_ELEMS(mess_data.header), remaining_elems);
+                printf("GOT FROM APP; %d %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, GET_HEADER_NUM_ELEMS(mess_data.header), remaining_elems);
                 SET_HEADER_OP(mess_data.header, SMI_BROADCAST);
                 stage = 4;
             }
