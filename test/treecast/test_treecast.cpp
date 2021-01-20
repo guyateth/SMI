@@ -141,7 +141,7 @@ TEST(Treecast, IntegerMessages)
     hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_int");
 
     std::vector<int> message_lengths={1,128,256};
-    std::vector<int> roots={0,1,5};
+    std::vector<int> roots={0,5};
     int runs=2;
     int j = 0;
     for(int root:roots)    //consider different roots
@@ -167,6 +167,7 @@ TEST(Treecast, IntegerMessages)
                 ASSERT_DURATION_LE(TEST_TIMEOUT, {
                   ASSERT_TRUE(runAndReturn(kernel,check));
                 });
+                printf("AFTER ITERATION %d\n", j++);
             }
         }
     }
