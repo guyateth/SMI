@@ -34,6 +34,7 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
 
             total_elems = * (((int*) mess.data) + 1);
             remaining_elems = total_elems;
+            num_requests = 0;
 
             if (GET_HEADER_OP(mess.header) == SMI_SYNCH)   // beginning of a treecast
             {
@@ -244,6 +245,7 @@ SMI_TreecastChannel {{ utils.impl_name_port_type("SMI_Open_treecast_channel", op
     SET_HEADER_OP(chan.net.header, SMI_SYNCH);           // used to signal to the support kernel that a new broadcast has begun
     SET_HEADER_SRC(chan.net.header, chan.my_rank);
     SET_HEADER_PORT(chan.net.header, chan.port);         // used by destination
+    SET_HEADER_NUM_ELEMS(chan.net.header, 0);            // at the beginning no data
            // since we offload to support kernel
     
 
@@ -258,7 +260,6 @@ SMI_TreecastChannel {{ utils.impl_name_port_type("SMI_Open_treecast_channel", op
     //
     if (chan.root_rank == chan.my_rank){
         // i am the root
-        SET_HEADER_NUM_ELEMS(chan.net.header, 0);            // at the beginning no data
         chan.my_parent = -1;
         chan.child_one = 1;
         // remove child if out of bounds
