@@ -10,15 +10,18 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
     char my_parent;
     char child_one;
     char child_two;
-    bool sent_one = false;
-    bool sent_two = false;
+
     char received_request = 0; // how many ranks are ready to receive
     char num_requests = 0;
     SMI_Network_message mess;
     SMI_Network_message mess_data;
     char init;
-    int total_elems = 0;
-    int remaining_elems = 0;
+
+    const char flow_control = 16; // choose it in order to have II=1
+
+    int remaining_elems;
+    bool sent_one = false;
+    bool sent_two = false;
 
     while (true)
     {
@@ -32,8 +35,7 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
             child_two = mess.data[1];
             my_parent = mess.data[2];
 
-            total_elems = * (((int*) mess.data) + 1);
-            remaining_elems = total_elems;
+            remaining_elems = * (((int*) mess.data) + 1);
             num_requests = 0;
 
             if (GET_HEADER_OP(mess.header) == SMI_SYNCH)   // beginning of a treecast
@@ -128,7 +130,7 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
                 stage = 0;
             } else {
                 mess_data = read_channel_intel({{ op.get_channel("treecast_data") }});
-                remaining_elems -= GET_HEADER_NUM_ELEMS(mess_data.header);
+                remaining_elems --;
                 //printf("GOT FROM APP; %d %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, GET_HEADER_NUM_ELEMS(mess_data.header), remaining_elems);
                 SET_HEADER_OP(mess_data.header, SMI_BROADCAST);
                 stage = 4;
@@ -143,7 +145,7 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
                 stage = 0;
             } else {
                 mess_data = read_channel_intel({{ op.get_channel("ckr_data") }});
-                remaining_elems -= GET_HEADER_NUM_ELEMS(mess_data.header);
+                remaining_elems --;
                 //printf("GOT FROM PARENT; %d %d %d %d\n", my_rank, my_parent, child_one, child_two);
                 SET_HEADER_OP(mess_data.header, SMI_BROADCAST);
                 stage = 4;
@@ -163,8 +165,11 @@ void {{ utils.impl_name_port_type("SMI_Treecast", op) }}(SMI_TreecastChannel* ch
             chan->net.data[0] = chan->child_one;
             chan->net.data[1] = chan->child_two;
             chan->net.data[2] = chan->my_parent;
+
+            int num_mes = (chan->message_size + chan->elements_per_packet - 1) / chan->elements_per_packet;
+
             int* num_req_place = ((int*) chan->net.data) + 1;
-            *num_req_place = chan->message_size;
+            *num_req_place = num_mes;
 
             write_channel_intel({{ op.get_channel("treecast_send") }}, chan->net);
             chan->init=false;
