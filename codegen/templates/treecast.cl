@@ -58,7 +58,7 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
         {
             if (received_request != 0) // we wait for pending requests
             {
-                //printf("WAITING RR; %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, received_request);
+                printf("WAITING RR; %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, received_request);
                 SMI_Network_message req = read_channel_intel({{ op.get_channel("ckr_control") }});
                 //printf("GOT RR; %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, received_request);
                 received_request--;
@@ -82,13 +82,13 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
             SET_HEADER_PORT(mess.header, {{ op.logical_port }});
             SET_HEADER_OP(mess_data.header, SMI_SYNCH);
             write_channel_intel({{ op.get_channel("cks_control") }}, mess);
-            //printf("SENT RR; %d %d %d %d\n", my_rank, my_parent, child_one, child_two);
+            printf("SENT RR; %d %d\n", my_rank, my_parent);
             stage = 6;
         }
         else if (stage == 4) // send data to children (STAGE = ROOT_SEND)
         {
             // we send to our children
-            if (!sent_one && child_one != -1 || !sent_two && child_two != -1)
+            if ((!sent_one && child_one != -1) || (!sent_two && child_two != -1))
             {
                 if (!sent_one && child_one != -1)
                 {
