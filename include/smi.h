@@ -20,4 +20,5 @@
 #include "smi/scatter.h"
 #include "smi/barrier.h"
 #include "smi/treecast.h"
+#include "smi/treereduce.h"
 #endif // SMI_H

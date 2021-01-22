@@ -14,6 +14,9 @@ KEY_BARRIER_LIFT = "barrier_lift"
 KEY_TREECAST_SEND = "treecast_send"
 KEY_TREECAST_RECV = "treecast_recv"
 KEY_TREECAST_DATA = "treecast_data"
+KEY_TREEREDUCE_SEND = "treereduce_send"
+KEY_TREEREDUCE_RECV = "treereduce_recv"
+KEY_TREEREDUCE_DATA = "treereduce_data"
 
 DATA_TYPE_SIZE = {
     "char":     1,
@@ -59,7 +62,10 @@ class SmiOperation:
             "barrier_lift": 1,
             "treecast_send": 1,
             "treecast_recv": 1,
-            "treecast_data": 1
+            "treecast_data": 1,
+            "treereduce_send": 1,
+            "treereduce_recv": 1,
+            "treereduce_data": 1
         }
         return mapping[channel]
 
@@ -123,6 +129,19 @@ class Treecast(SmiOperation):
             KEY_TREECAST_SEND,
             KEY_TREECAST_RECV,
             KEY_TREECAST_DATA
+        }
+
+
+class Treereduce(SmiOperation):
+    def channel_usage(self, p2p_rendezvous: bool) -> Set[str]:
+        return {
+            KEY_CKS_DATA,
+            KEY_CKS_CONTROL,
+            KEY_CKR_DATA,
+            KEY_CKR_CONTROL,
+            KEY_TREEREDUCE_SEND,
+            KEY_TREEREDUCE_RECV,
+            KEY_TREEREDUCE_DATA
         }
 
 
@@ -242,4 +261,5 @@ OP_MAPPING = {
     "gather": Gather,
     "barrier": Barrier,
     "treecast": Treecast,
+    "treereduce": Treereduce
 }

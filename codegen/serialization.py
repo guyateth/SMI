@@ -3,7 +3,7 @@ import re
 import os
 from typing import List, Tuple, Dict
 
-from ops import Broadcast, Push, Pop, Reduce, Scatter, Gather, Barrier, Treecast
+from ops import Broadcast, Push, Pop, Reduce, Scatter, Gather, Barrier, Treecast, Treereduce
 from program import Program, SmiOperation, ProgramMapping
 
 SMI_OP_KEYS = {
@@ -14,7 +14,8 @@ SMI_OP_KEYS = {
     "scatter": Scatter,
     "gather": Gather,
     "barrier": Barrier,
-    "treecast": Treecast
+    "treecast": Treecast,
+    "treereduce": Treereduce
 }
 
 

@@ -90,6 +90,16 @@ add_test(
    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/test_reduce/"
  )
 
+#treereduce
+smi_target(test_treereduce "${CMAKE_CURRENT_SOURCE_DIR}/treereduce/treereduce.json" "${CMAKE_CURRENT_SOURCE_DIR}/treereduce/test_treereduce.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/treereduce/treereduce.cl" 8)
+target_link_libraries(test_treereduce_host gtest)
+
+add_test(
+   NAME treereduce
+   COMMAND  env  CL_CONTEXT_EMULATOR_DEVICE_INTELFPGA=8 mpirun -np 8 test_treereduce_host
+   WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/test_treereduce/"
+ )
+
 
 smi_target(test_scatter "${CMAKE_CURRENT_SOURCE_DIR}/scatter/scatter.json" "${CMAKE_CURRENT_SOURCE_DIR}/scatter/test_scatter.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/scatter/scatter.cl" 8)
 target_link_libraries(test_scatter_host gtest)

@@ -10,6 +10,7 @@
 #include "ops/reduce.h"
 #include "ops/barrier.h"
 #include "ops/treecast.h"
+#include "ops/treereduce.h"
 
 #include <iostream>
 
@@ -50,7 +51,8 @@ public:
         this->extractors.push_back(std::make_unique<ScatterChannelExtractor>());
         this->extractors.push_back(std::make_unique<TreecastExtractor>());
         this->extractors.push_back(std::make_unique<TreecastChannelExtractor>());
-
+        this->extractors.push_back(std::make_unique<TreereduceExtractor>());
+        this->extractors.push_back(std::make_unique<TreereduceChannelExtractor>());
 
         for (auto& extractor: this->extractors)
         {

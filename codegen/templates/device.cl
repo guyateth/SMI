@@ -11,6 +11,7 @@
 {% import 'gather.cl' as smi_gather %}
 {% import 'barrier.cl' as smi_barrier %}
 {% import 'treecast.cl' as smi_treecast %}
+{% import 'treereduce.cl' as smi_treereduce %}
 
 // the maximum number of consecutive reads that each CKs/CKr can do from the same channel
 #define READS_LIMIT {{ program.consecutive_read_limit }}
@@ -69,6 +70,7 @@ channel SMI_Network_message channels_interconnect_ck_r_to_ck_s[QSFP_COUNT] __att
 #include "smi/gather.h"
 #include "smi/barrier.h"
 #include "smi/treecast.h"
+#include "smi/treereduce.h"
 #include "smi/communicator.h"
 
 {% for channel in channels %}
@@ -112,3 +114,7 @@ channel SMI_Network_message channels_interconnect_ck_r_to_ck_s[QSFP_COUNT] __att
 {{ generate_op_impl("treecast", smi_treecast.smi_treecast_kernel) }}
 {{ generate_op_impl("treecast", smi_treecast.smi_treecast_channel) }}
 {{ generate_op_impl("treecast", smi_treecast.smi_treecast_impl) }}
+// Tree Broadcast
+{{ generate_op_impl("treereduce", smi_treereduce.smi_treereduce_kernel) }}
+{{ generate_op_impl("treereduce", smi_treereduce.smi_treereduce_channel) }}
+{{ generate_op_impl("treereduce", smi_treereduce.smi_treereduce_impl) }}
