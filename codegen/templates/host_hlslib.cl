@@ -68,7 +68,7 @@ SMI_Comm SmiInit_{{ name }}(
     {{ generate_collective_kernels("gather", "smi_kernel_gather") }}
     {{ generate_collective_kernels("barrier", "smi_kernel_barrier") }}
     {{ generate_collective_kernels("treecast", "smi_kernel_treecast") }}
-    {{ generate_collective_kernels("treereduce", "smi_kernel_bcast") }}
+    {{ generate_collective_kernels("treereduce", "smi_kernel_treereduce") }}
 
     // start the kernels
     for (auto &k : comm_kernels) {
