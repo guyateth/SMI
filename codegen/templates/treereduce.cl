@@ -14,9 +14,6 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
     char child_one;
     char child_two;
 
-    char sender_id = 0;
-    unsigned int sent_credits = 0;
-
     char received_request = 0; // how many ranks are ready to receive
     char num_children = 1; // we have at elast one, the app
     SMI_Network_message mess;
@@ -28,6 +25,9 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
     const char credits_flow_control = 16; // choose it in order to have II=1
     {{ op.data_type }} __attribute__((register)) reduce_result[credits_flow_control][SHIFT_REG + 1];
     char data_recvd[credits_flow_control];
+
+    char sender_id = 0;
+    char add_to[MAX_RANKS];   // for each rank tells to what element in the buffer we should add the received item
 
     char current_buffer_element = 0;
     char add_to_root = 0;
@@ -100,16 +100,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
 
                     data_recvd[add_to_root]++;
                     a = add_to_root;
-                    if (GET_HEADER_OP(mess.header) == SMI_SYNCH) // first element of a new reduce
-                    {
-                        sent_credits = 0;
-                        send_to = 0;
-                        // since data elements are not packed we exploit the data buffer
-                        // to indicate to the support kernel the lenght of the message
-                        message_size = *(unsigned int *) (&(mess.data[24]));
-                        send_credits = true;
-                        credits = MIN((unsigned int) credits_flow_control, message_size);
-                    }
+
                     add_to_root++;
                     if (add_to_root == credits_flow_control)
                     {
