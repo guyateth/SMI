@@ -145,7 +145,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
             if (data_recvd[current_buffer_element] == num_children) 
             {
                 // we need to send the current buffer element to our children
-                printf("ALL CONTRIBUTIONS RECIEVED; %d \n", my_rank, my_parent);
+                printf("ALL CONTRIBUTIONS RECIEVED; %d \n", my_rank);
                 stage = 1;
             }
 
