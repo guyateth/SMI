@@ -62,6 +62,8 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 if (child_two != -1) num_children ++;
                 received_request = num_children;
             }
+            printf("END OF INIT; %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, received_request);
+            init = true;
         }
         bool valid = false;
 
