@@ -218,6 +218,8 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 SET_HEADER_DST(reduce_result_downtree.header, my_rank);
                 SET_HEADER_PORT(reduce_result_downtree.header, {{ op.logical_port }});
                 write_channel_intel({{ op.get_channel("treereduce_recv") }}, reduce_result_downtree);
+                remaining_elems --;
+                if (remaining_elems == 0) init = false;
                 
             }
         }      
@@ -236,7 +238,7 @@ void {{ utils.impl_name_port_type("SMI_Treereduce", op) }}(SMI_TreereduceChannel
         chan->net.data[1] = chan->child_two;
         chan->net.data[2] = chan->my_parent;
 
-        int num_mes = (chan->message_size + chan->elements_per_packet - 1) / chan->elements_per_packet;
+        int num_mes = (chan->message_size);
 
         int* num_req_place = ((int*) chan->net.data) + 1;
         *num_req_place = num_mes;
@@ -287,7 +289,7 @@ SMI_TreereduceChannel {{ utils.impl_name_port_type("SMI_Open_treereduce_channel"
     chan.reduce_op = (char) op;
     chan.init = true;
     chan.size_of_type = {{ op.data_size() }};
-    chan.elements_per_packet = {{ op.data_elements_per_packet() }};
+    chan.elements_per_packet = 1;
     chan.creds = 16;
 
 
