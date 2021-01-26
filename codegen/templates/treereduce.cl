@@ -112,7 +112,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 else if (sender_id == 1)
                 {
                     // received contribution from a non-root rank, apply reduce operation
-                    printf("MESSAGE FROM CHILD; %d %d\n", my_rank);
+                    printf("MESSAGE FROM CHILD; %d\n", my_rank);
                     contiguos_reads++;
                     char* ptr = mess.data;
                     char rank = GET_HEADER_SRC(mess.header);
