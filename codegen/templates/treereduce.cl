@@ -112,7 +112,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 else if (sender_id == 1)
                 {
                     // received contribution from a non-root rank, apply reduce operation
-                    printf("MESSAGE FROM CHILD; %d\n", my_rank);
+                    printf("MESSAGE FROM CHILD; %d \n", my_rank);
                     contiguos_reads++;
                     char* ptr = mess.data;
                     char rank = GET_HEADER_SRC(mess.header);
@@ -145,6 +145,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
             if (data_recvd[current_buffer_element] == num_children) 
             {
                 // we need to send the current buffer element to our children
+                printf("ALL CONTRIBUTIONS RECIEVED; %d \n", my_rank, my_parent);
                 stage = 1;
             }
 
@@ -199,6 +200,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
             {
                 SET_HEADER_DST(reduce.header, my_parent);
                 SET_HEADER_PORT(reduce.header, {{ op.logical_port }});
+                printf("MESSAGE TO PARENT; %d -> %d \n", my_rank, my_parent);
                 write_channel_intel({{ op.get_channel("cks_data") }}, reduce);
                 reduce_mess_ready = false;
                 stage = 0;

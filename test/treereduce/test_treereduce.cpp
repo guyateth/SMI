@@ -80,7 +80,7 @@ TEST(Treereduce, CharMax)
     hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_char_max");
 
     std::vector<int> message_lengths={1,128, 300};
-    std::vector<int> roots={1,4,7};
+    std::vector<int> roots={0,4,7};
     int runs=2;
     for(int root:roots)    //consider different roots
     {
