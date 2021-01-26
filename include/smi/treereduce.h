@@ -3,7 +3,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 
 /**
-   @file barrier.h
+   @file treereduce.h
    This file contains the definition of channel descriptor,
    open channel and communication primitive for Barrier.
 */
@@ -34,6 +34,8 @@ typedef struct __attribute__((packed)) __attribute__((aligned(64))){
     char child_one;
     char child_two;
     char my_parent;
+    char reduce_op;
+    char creds;
 }SMI_TreereduceChannel;
 
 /**
@@ -45,7 +47,7 @@ typedef struct __attribute__((packed)) __attribute__((aligned(64))){
  * @param comm communicator
  * @return the channel descriptor
  */
-SMI_TreereduceChannel SMI_Open_treereduce_channel(int count, SMI_Datatype data_type, int port, int root, SMI_Comm comm);
+SMI_TreereduceChannel SMI_Open_treereduce_channel(int count, SMI_Datatype data_type, SMI_Op op, int port, int root, SMI_Comm comm);
 
 /**
  * @brief SMI_Open_bcast_channel_ad opens a barrier channel with a given asynchronicity degree
@@ -57,7 +59,7 @@ SMI_TreereduceChannel SMI_Open_treereduce_channel(int count, SMI_Datatype data_t
  * @param asynch_degree the asynchronicity degree in number of data elements
  * @return the channel descriptor
  */
-SMI_TreereduceChannel SMI_Open_treereduce_channel_ad(int count, SMI_Datatype data_type, int port, int root, SMI_Comm comm, int asynch_degree);
+SMI_TreereduceChannel SMI_Open_treereduce_channel_ad(int count, SMI_Datatype data_type, SMI_Op op, int port, int root, SMI_Comm comm, int asynch_degree);
 
 /**
  * @brief SMI_Bcast

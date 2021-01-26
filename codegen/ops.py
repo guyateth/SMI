@@ -17,6 +17,7 @@ KEY_TREECAST_DATA = "treecast_data"
 KEY_TREEREDUCE_SEND = "treereduce_send"
 KEY_TREEREDUCE_RECV = "treereduce_recv"
 KEY_TREEREDUCE_DATA = "treereduce_data"
+KEY_TREEREDUCE_INIT = "treereduce_init"
 
 DATA_TYPE_SIZE = {
     "char":     1,
@@ -132,19 +133,6 @@ class Treecast(SmiOperation):
         }
 
 
-class Treereduce(SmiOperation):
-    def channel_usage(self, p2p_rendezvous: bool) -> Set[str]:
-        return {
-            KEY_CKS_DATA,
-            KEY_CKS_CONTROL,
-            KEY_CKR_DATA,
-            KEY_CKR_CONTROL,
-            KEY_TREEREDUCE_SEND,
-            KEY_TREEREDUCE_RECV,
-            KEY_TREEREDUCE_DATA
-        }
-
-
 class Reduce(SmiOperation):
     """
     Maps data type to SHIFT_REG.
@@ -218,6 +206,20 @@ class Reduce(SmiOperation):
 
     def _signature(self):
         return (*super()._signature(), self.op_type)
+
+
+class Treereduce(Reduce):
+    def channel_usage(self, p2p_rendezvous: bool) -> Set[str]:
+        return {
+            KEY_CKS_DATA,
+            KEY_CKS_CONTROL,
+            KEY_CKR_DATA,
+            KEY_CKR_CONTROL,
+            KEY_TREEREDUCE_SEND,
+            KEY_TREEREDUCE_RECV,
+            KEY_TREEREDUCE_DATA,
+            KEY_TREEREDUCE_INIT
+        }
 
 
 class Scatter(SmiOperation):

@@ -44,20 +44,9 @@ __kernel void smi_kernel_bcast_{{ op.logical_port }}(char num_rank)
                 if (child_two != -1) num_requests ++;
                 received_request = num_requests;
             }
-            
-            if (my_parent == -1) // i am the root
-            {
-                //
-                stage = 2;
-                //printf("END OF STAGE 0 ROOT; %d %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, num_requests, total_elems);
-            }
-            else // i am not the root
-            {
-                stage = 2;
-                //printf("END OF STAGE 0 NONROOT; %d %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, num_requests, total_elems);
-            }
+            stage = 1;
         }
-        else if (stage == 2) // wait for readies from all children (STAGE = WAIT_CHILDREN)
+        else if (stage == 1) // wait for readies from all children (STAGE = WAIT_CHILDREN)
         {
             if (received_request != 0) // we wait for pending requests
             {
