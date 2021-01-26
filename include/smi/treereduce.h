@@ -67,5 +67,5 @@ SMI_TreereduceChannel SMI_Open_treereduce_channel_ad(int count, SMI_Datatype dat
  * @param data pointer to the data element: on the root rank is the element that will be transmitted,
     on the non-root rank will be the received element
  */
-void SMI_Treereduce(SMI_TreereduceChannel *chan, void* data);
+void SMI_Treereduce(SMI_TreereduceChannel *chan, void* data_snd, void* data_rcv);
 #endif // BARRIER_H
