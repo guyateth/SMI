@@ -66,7 +66,8 @@ class SmiOperation:
             "treecast_data": 1,
             "treereduce_send": 1,
             "treereduce_recv": 1,
-            "treereduce_data": 1
+            "treereduce_data": 1,
+            "treereduce_init": 1
         }
         return mapping[channel]
 
