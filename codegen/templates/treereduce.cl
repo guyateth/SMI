@@ -218,7 +218,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 SET_HEADER_PORT(reduce.header, {{ op.logical_port }});
                 SET_HEADER_SRC(reduce.header, my_rank);
                 SET_HEADER_OP(reduce_result_downtree.header, SMI_REDUCE);
-                SET_HEADER_NUM_ELEMS(reduce_result_downtree.header,1)
+                SET_HEADER_NUM_ELEMS(reduce_result_downtree.header,1);
                 printf("MESSAGE TO PARENT; %d -> %d \n", my_rank, my_parent);
                 write_channel_intel({{ op.get_channel("cks_data") }}, reduce);
                 reduce_mess_ready = false;
