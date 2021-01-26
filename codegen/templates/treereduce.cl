@@ -158,8 +158,9 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
             if (!reduce_mess_ready)
             {
                 // We received all the contributions, we can send result to application
-                if (my_parent != -1) char* data_snd = reduce.data;
-                else char* data_snd = reduce_result_downtree.data;
+                char* data_snd;
+                if (my_parent != -1) data_snd = reduce.data;
+                else data_snd = reduce_result_downtree.data;
                 // Build reduced result
                 {{ op.data_type }} res = {{ op.shift_reg_init() }};
                 #pragma unroll
