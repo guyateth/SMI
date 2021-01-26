@@ -5,6 +5,8 @@
 
 __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
 {
+    __constant int SHIFT_REG = {{ op.shift_reg() }};
+    
     char stage = 0;
     char rcv;
     char root;
