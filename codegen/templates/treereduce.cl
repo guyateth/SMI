@@ -94,7 +94,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                     mess = read_channel_nb_intel({{ op.get_channel("ckr_data") }}, &valid);
                     break;
                 case 2:
-                    reduce_result_downtree = read_channel_nb_intel({{ op.get_channel("treereduce_data") }}, &valid);
+                    reduce_result_downtree = read_channel_nb_intel({{ op.get_channel("ckr_control") }}, &valid);
                     break;
             }
 
@@ -217,6 +217,8 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 SET_HEADER_DST(reduce.header, my_parent);
                 SET_HEADER_PORT(reduce.header, {{ op.logical_port }});
                 SET_HEADER_SRC(reduce.header, my_rank);
+                SET_HEADER_OP(reduce_result_downtree.header, SMI_REDUCE);
+                SET_HEADER_NUM_ELEMS(reduce_result_downtree.header,1)
                 printf("MESSAGE TO PARENT; %d -> %d \n", my_rank, my_parent);
                 write_channel_intel({{ op.get_channel("cks_data") }}, reduce);
                 reduce_mess_ready = false;
@@ -233,18 +235,22 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
             {
                 if (!sent_one && child_one != -1)
                 {
+                    SET_HEADER_OP(reduce_result_downtree.header, SMI_SYNCH);
+                    SET_HEADER_NUM_ELEMS(reduce_result_downtree.header,1);
                     SET_HEADER_DST(reduce_result_downtree.header, child_one);
                     SET_HEADER_PORT(reduce_result_downtree.header, {{ op.logical_port }});
                     sent_one = true;
                 }
                 else if (!sent_two && child_two != -1)
                 {
+                    SET_HEADER_OP(reduce_result_downtree.header, SMI_SYNCH);
+                    SET_HEADER_NUM_ELEMS(reduce_result_downtree.header,1);
                     SET_HEADER_DST(reduce_result_downtree.header, child_two);
                     SET_HEADER_PORT(reduce_result_downtree.header, {{ op.logical_port }});
                     sent_two = true;
                 }
                 printf("MESSAGE TO CHILD; %d -> %d \n", my_rank, GET_HEADER_DST(reduce_result_downtree.header));
-                write_channel_intel({{ op.get_channel("treereduce_data") }}, reduce_result_downtree);
+                write_channel_intel({{ op.get_channel("cks_control") }}, reduce_result_downtree);
             }
             else
             {   
