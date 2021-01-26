@@ -179,6 +179,19 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                     data_snd[jj] = conv[jj];
                 }
                 reduce_mess_ready = true;
+                data_recvd[current_buffer_element] = 0;
+
+                //reset shift register
+                #pragma unroll
+                for (int j = 0; j < SHIFT_REG + 1; j++)
+                {
+                    reduce_result[current_buffer_element][j] =  {{ op.shift_reg_init() }};
+                }
+                current_buffer_element++;
+                if (current_buffer_element == credits_flow_control)
+                {
+                    current_buffer_element = 0;
+                }
             }
 
             // we send to our parent
