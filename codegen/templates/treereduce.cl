@@ -40,6 +40,21 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
     bool sent_one;
     bool sent_two;
 
+    for (int i = 0;i < credits_flow_control; i++)
+    {
+        data_recvd[i] = 0;
+        #pragma unroll
+        for(int j = 0; j < SHIFT_REG + 1; j++)
+        {
+            reduce_result[i][j] = {{ op.shift_reg_init() }};
+        }
+    }
+
+    for (int i = 0; i < MAX_RANKS; i++)
+    {
+        add_to[i] = 0;
+    }
+
     while (true)
     {
         if (!init)
@@ -112,7 +127,6 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 else if (sender_id == 1)
                 {
                     // received contribution from a non-root rank, apply reduce operation
-                    printf("MESSAGE FROM CHILD; %d \n", my_rank);
                     contiguos_reads++;
                     char* ptr = mess.data;
                     char rank = GET_HEADER_SRC(mess.header);
@@ -126,6 +140,8 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                     {
                         reduce_result[addto][j] = reduce_result[addto][j + 1];
                     }
+
+                    printf("MESSAGE FROM CHILD; %d FROM: %d; TOTAL: %d SHIFT REG: %d\n", my_rank, rank, data_recvd[addto], add_to);
 
                     addto++;
                     if (addto == credits_flow_control)
