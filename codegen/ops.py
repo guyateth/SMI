@@ -209,7 +209,50 @@ class Reduce(SmiOperation):
         return (*super()._signature(), self.op_type)
 
 
-class Treereduce(Reduce):
+class Treereduce(SmiOperation):
+    """
+    Maps data type to SHIFT_REG.
+    """
+    SHIFT_REG = {
+        "double": 4,
+        "float": 4,
+        "int": 1,
+        "short": 1,
+        "char": 1
+    }
+
+    OP_TYPE = {
+        "add": "SMI_OP_ADD",
+        "max": "SMI_OP_MAX",
+        "min": "SMI_OP_MIN"
+    }
+
+    SHIFT_REG_INIT = {
+        ("char", "add"): "0",
+        ("short", "add"): "0",
+        ("int", "add"): "0",
+        ("float", "add"): "0",
+        ("double", "add"): "0",
+        ("char", "max"): "CHAR_MIN",
+        ("short", "max"): "SHRT_MIN",
+        ("int", "max"): "INT_MIN",
+        ("float", "max"): "FLT_MIN",
+        ("double", "max"): "DBL_MIN",
+        ("char", "min"): "CHAR_MAX",
+        ("short", "min"): "SHRT_MAX",
+        ("int", "min"): "INT_MAX",
+        ("float", "min"): "FLT_MAX",
+        ("double", "min"): "DBL_MAX"
+
+    }
+
+    def __init__(self, logical_port, data_type="int", buffer_size=None, op_type="add"):
+        super().__init__(logical_port, data_type, buffer_size)
+
+        assert data_type in Treereduce.SHIFT_REG
+        assert op_type in Treereduce.OP_TYPE
+        self.op_type = op_type
+
     def channel_usage(self, p2p_rendezvous: bool) -> Set[str]:
         return {
             KEY_CKS_DATA,
@@ -221,6 +264,26 @@ class Treereduce(Reduce):
             KEY_TREEREDUCE_DATA,
             KEY_TREEREDUCE_INIT
         }
+
+    def shift_reg(self) -> int:
+        return Treereduce.SHIFT_REG[self.data_type]
+
+    def data_size(self) -> int:
+        return DATA_TYPE_SIZE[self.data_type]
+
+    def reduce_op(self) -> str:
+        return Treereduce.OP_TYPE[self.op_type]
+
+    def shift_reg_init(self) -> str:
+        return Treereduce.SHIFT_REG_INIT[(self.data_type, self.op_type)]
+
+    def serialize_args(self):
+        return {
+            "op_type": self.op_type
+        }
+
+    def _signature(self):
+        return (*super()._signature(), self.op_type)
 
 
 class Scatter(SmiOperation):
