@@ -6,8 +6,7 @@
 __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
 {
     __constant int SHIFT_REG = {{ op.shift_reg() }};
-    
-    char stage = 0;
+
     char rcv;
     char root;
     char my_rank;
@@ -15,12 +14,14 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
     char child_one;
     char child_two;
 
+    char sender_id = 0;
+    unsigned int sent_credits = 0;
+
     char received_request = 0; // how many ranks are ready to receive
     char num_children = 1; // we have at elast one, the app
     SMI_Network_message mess;
     SMI_Network_message reduce;
     SMI_Network_message reduce_result_downtree;
-    char init;
 
     int remaining_elems;
 
