@@ -54,7 +54,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
             my_parent = mess.data[2];
 
             remaining_elems = * (((int*) mess.data) + 1);
-            num_children = 0;
+            num_children = 1;
 
             if (GET_HEADER_OP(mess.header) == SMI_SYNCH)   // beginning of a treecast
             {
@@ -90,6 +90,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 {
                     // received root contribution to the reduced result
                     // apply reduce
+                    printf("MESSAGE FROM APP; %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, received_request);
                     char* ptr = mess.data;
                     {{ op.data_type }} data= *({{ op.data_type }}*) (ptr);
                     reduce_result[add_to_root][SHIFT_REG] = {{ op.reduce_op() }}(data, reduce_result[add_to_root][0]); // apply reduce
@@ -111,6 +112,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 else if (sender_id == 1)
                 {
                     // received contribution from a non-root rank, apply reduce operation
+                    printf("MESSAGE FROM CHILD; %d %d\n", my_rank);
                     contiguos_reads++;
                     char* ptr = mess.data;
                     char rank = GET_HEADER_SRC(mess.header);
@@ -134,6 +136,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 }
                 else
                 {
+                    printf("MESSAGE FROM PARENT - FORWARDING; %d %d \n", my_rank, my_parent);
                     // recieved a credit from parent, forward to my children and app
                     stage = 2;
                 }
