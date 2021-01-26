@@ -95,6 +95,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                     break;
                 case 2:
                     reduce_result_downtree = read_channel_nb_intel({{ op.get_channel("treereduce_data") }}, &valid);
+                    printf("HEREE")
                     break;
             }
 
