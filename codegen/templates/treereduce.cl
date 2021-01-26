@@ -62,7 +62,6 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 if (child_two != -1) num_children ++;
                 received_request = num_children;
             }
-            stage = 1;
         }
         bool valid = false;
 
