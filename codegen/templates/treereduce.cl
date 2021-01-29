@@ -90,7 +90,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                     mess = read_channel_nb_intel({{ op.get_channel("treereduce_send") }}, &valid);
                     break;
                 case 1: // read from CK_R, can be done by the root and by the non-root
-                    mess = read_channel_nb_intel({{ op.get_channel("ckr_control") }}, &valid);
+                    mess = read_channel_nb_intel({{ op.get_channel("treereduce_data_upstream") }}, &valid);
                     break;
                 case 2:
                     reduce_result_downtree = read_channel_nb_intel({{ op.get_channel("ckr_data") }}, &valid);
@@ -214,7 +214,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 SET_HEADER_OP(reduce.header, SMI_SYNCH);
                 SET_HEADER_NUM_ELEMS(reduce.header,1);
                 printf("MESSAGE TO PARENT; %d -> %d CBE: %d\n", my_rank, my_parent, current_buffer_element);
-                write_channel_intel({{ op.get_channel("cks_control") }}, reduce);
+                write_channel_intel({{ op.get_channel("treereduce_data_upstream") }}, reduce);
                 stage = 0;
             } 
             else 

@@ -16,7 +16,7 @@ KEY_TREECAST_RECV = "treecast_recv"
 KEY_TREECAST_DATA = "treecast_data"
 KEY_TREEREDUCE_SEND = "treereduce_send"
 KEY_TREEREDUCE_RECV = "treereduce_recv"
-KEY_TREEREDUCE_DATA = "treereduce_data"
+KEY_TREEREDUCE_DATA_UP = "treereduce_data_upstream"
 KEY_TREEREDUCE_INIT = "treereduce_init"
 
 DATA_TYPE_SIZE = {
@@ -66,7 +66,7 @@ class SmiOperation:
             "treecast_data": 1,
             "treereduce_send": 1,
             "treereduce_recv": 1,
-            "treereduce_data": 1,
+            "treereduce_data_upstream": 1,
             "treereduce_init": 1
         }
         return mapping[channel]
@@ -261,7 +261,7 @@ class Treereduce(SmiOperation):
             KEY_CKR_CONTROL,
             KEY_TREEREDUCE_SEND,
             KEY_TREEREDUCE_RECV,
-            KEY_TREEREDUCE_DATA,
+            KEY_TREEREDUCE_DATA_UP,
             KEY_TREEREDUCE_INIT
         }
 
