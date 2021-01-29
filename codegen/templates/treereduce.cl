@@ -239,7 +239,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 SET_HEADER_NUM_ELEMS(reduce_result_downtree.header,1);
                 SET_HEADER_SRC(reduce_result_downtree.header,my_rank);
                 SET_HEADER_PORT(reduce_result_downtree.header, {{ op.logical_port }});
-                SET_HEADER_OP(reduce_result_downtree.header, SMI_SYNCH);
+                SET_HEADER_OP(reduce_result_downtree.header, SMI_REDUCE);
                 write_channel_intel({{ op.get_channel("cks_data") }}, reduce_result_downtree);
                 printf("MESSAGE TO CHILD; %d -> %d CBE: %d\n", my_rank, GET_HEADER_DST(reduce_result_downtree.header), current_buffer_element);
             }
