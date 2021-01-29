@@ -7,8 +7,6 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
 {
     __constant int SHIFT_REG = {{ op.shift_reg() }};
 
-    char rcv;
-    char root;
     char my_rank;
     char my_parent;
     char child_one;
@@ -54,7 +52,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
     {
         add_to[i] = 0;
     }
-
+    int cntr = 0;
     while (true)
     {
         if (!init)
@@ -94,6 +92,10 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                     mess = read_channel_nb_intel({{ op.get_channel("ckr_data") }}, &valid);
                     break;
                 case 2:
+                    if (my_rank == 3) {
+                        cntr++;
+                        if (cntr % 10000 == 0) printf("stillalive");
+                    }
                     reduce_result_downtree = read_channel_nb_intel({{ op.get_channel("ckr_control") }}, &valid);
                     break;
             }
