@@ -6,7 +6,7 @@
          env  CL_CONTEXT_EMULATOR_DEVICE_INTELFPGA=8 mpirun -np 8 ./test_gather.exe "./gather_emulator_<rank>.aocx"
  */
 
-#define TEST_TIMEOUT 120
+#define TEST_TIMEOUT 60
 
 #include <gtest/gtest.h>
 #include <stdio.h>
