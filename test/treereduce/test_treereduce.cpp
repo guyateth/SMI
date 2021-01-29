@@ -71,7 +71,7 @@ TEST(Treereduce, MPIinit)
     ASSERT_EQ(rank_count,8);
 }
 
-
+/*
 TEST(Treereduce, CharMax)
 {
     //with this test we evaluate the correcteness of integer messages transmission
@@ -145,6 +145,7 @@ TEST(Treereduce, ShortMin)
         }
     }
 }
+*/
 TEST(Treereduce, IntAdd)
 {
     //with this test we evaluate the correcteness of integer messages transmission
@@ -215,7 +216,7 @@ TEST(Treereduce, IntMax)
         }
     }
 }
-
+/*
 TEST(Treereduce, FloatAdd)
 {
     hlslib::ocl::Buffer<char, hlslib::ocl::Access::readWrite> check = context->MakeBuffer<char, hlslib::ocl::Access::readWrite>(1);
@@ -282,7 +283,7 @@ TEST(Treereduce, DoubleAdd)
         }
     }
 }
-
+*/
 TEST(Treereduce, IntMaxAD)
 {
 
@@ -316,7 +317,7 @@ TEST(Treereduce, IntMaxAD)
         }
     }
 }
-
+/*
 TEST(Treereduce, FloatMinAD)
 {
 
@@ -350,7 +351,7 @@ TEST(Treereduce, FloatMinAD)
         }
     }
 }
-
+*/
 
 
 int main(int argc, char *argv[])
