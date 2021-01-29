@@ -211,7 +211,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 SET_HEADER_DST(reduce.header, my_parent);
                 SET_HEADER_PORT(reduce.header, {{ op.logical_port }});
                 SET_HEADER_SRC(reduce.header, my_rank);
-                SET_HEADER_OP(reduce.header, SMI_SYNCH);
+                SET_HEADER_OP(reduce.header, SMI_REDUCE);
                 SET_HEADER_NUM_ELEMS(reduce.header,1);
                 printf("MESSAGE TO PARENT; %d -> %d CBE: %d\n", GET_HEADER_SRC(reduce.header), GET_HEADER_DST(reduce.header), current_buffer_element);
                 write_channel_intel({{ op.get_channel("treereduce_data_upstream") }}, reduce);
