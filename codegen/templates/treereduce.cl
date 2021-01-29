@@ -77,6 +77,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
             {
                 add_to[i] = 0;
             }
+            current_buffer_element = 0;
         }
         bool valid = false;
 
@@ -139,7 +140,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                         reduce_result[addto][j] = reduce_result[addto][j + 1];
                     }
 
-                    printf("MESSAGE FROM CHILD; %d FROM: %d; TOTAL: %d SHIFT REG: %d\n", my_rank, rank, data_recvd[addto], addto);
+                    printf("MESSAGE FROM CHILD; %d FROM: %d; TOTAL: %d SHIFT REG: %d VAL: %d\n", my_rank, rank, data_recvd[addto], addto, *data);
 
                     addto++;
                     if (addto == credits_flow_control)
