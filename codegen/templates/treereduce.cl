@@ -170,40 +170,38 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
 
         else if (stage == 1)
         {
-            if (!reduce_mess_ready)
+            // We received all the contributions, we can send result to application
+            char* data_snd;
+            if (my_parent != -1) data_snd = reduce.data;
+            else data_snd = reduce_result_downtree.data;
+            // Build reduced result
+            {{ op.data_type }} res = {{ op.shift_reg_init() }};
+            #pragma unroll
+            for (int i = 0; i < SHIFT_REG; i++)
             {
-                // We received all the contributions, we can send result to application
-                char* data_snd;
-                if (my_parent != -1) data_snd = reduce.data;
-                else data_snd = reduce_result_downtree.data;
-                // Build reduced result
-                {{ op.data_type }} res = {{ op.shift_reg_init() }};
-                #pragma unroll
-                for (int i = 0; i < SHIFT_REG; i++)
-                {
-                    res = {{ op.reduce_op() }}(res,reduce_result[current_buffer_element][i]);
-                }
-                char* conv = (char*)(&res);
-                #pragma unroll
-                for (int jj = 0; jj < {{ op.data_size() }}; jj++) // copy the data
-                {
-                    data_snd[jj] = conv[jj];
-                }
-                reduce_mess_ready = true;
-                data_recvd[current_buffer_element] = 0;
-
-                //reset shift register
-                #pragma unroll
-                for (int j = 0; j < SHIFT_REG + 1; j++)
-                {
-                    reduce_result[current_buffer_element][j] =  {{ op.shift_reg_init() }};
-                }
-                current_buffer_element++;
-                if (current_buffer_element == credits_flow_control)
-                {
-                    current_buffer_element = 0;
-                }
+                res = {{ op.reduce_op() }}(res,reduce_result[current_buffer_element][i]);
             }
+            char* conv = (char*)(&res);
+            #pragma unroll
+            for (int jj = 0; jj < {{ op.data_size() }}; jj++) // copy the data
+            {
+                data_snd[jj] = conv[jj];
+            }
+            reduce_mess_ready = true;
+            data_recvd[current_buffer_element] = 0;
+
+            //reset shift register
+            #pragma unroll
+            for (int j = 0; j < SHIFT_REG + 1; j++)
+            {
+                reduce_result[current_buffer_element][j] =  {{ op.shift_reg_init() }};
+            }
+            current_buffer_element++;
+            if (current_buffer_element == credits_flow_control)
+            {
+                current_buffer_element = 0;
+            }
+            
 
             // we send to our parent
             if (my_parent != -1) // im not the root, send to parent
@@ -215,7 +213,6 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 SET_HEADER_NUM_ELEMS(reduce.header,1);
                 printf("MESSAGE TO PARENT; %d -> %d CBE: %d\n", my_rank, my_parent, current_buffer_element);
                 write_channel_intel({{ op.get_channel("cks_data") }}, reduce);
-                reduce_mess_ready = false;
                 stage = 0;
             } 
             else 
