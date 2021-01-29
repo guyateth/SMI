@@ -37,8 +37,8 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
 
     int stage = 0;
     bool reduce_mess_ready = false;
-    bool sent_one;
-    bool sent_two;
+    bool sent_one = false;
+    bool sent_two = false;
 
     for (int i = 0;i < credits_flow_control; i++)
     {
