@@ -232,22 +232,19 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
             {
                 if (!sent_one && child_one != -1)
                 {
-                    SET_HEADER_OP(reduce_result_downtree.header, SMI_SYNCH);
-                    SET_HEADER_NUM_ELEMS(reduce_result_downtree.header,1);
                     SET_HEADER_DST(reduce_result_downtree.header, child_one);
-                    SET_HEADER_PORT(reduce_result_downtree.header, {{ op.logical_port }});
                     sent_one = true;
                 }
                 else if (!sent_two && child_two != -1)
                 {
-                    SET_HEADER_OP(reduce_result_downtree.header, SMI_SYNCH);
-                    SET_HEADER_NUM_ELEMS(reduce_result_downtree.header,1);
                     SET_HEADER_DST(reduce_result_downtree.header, child_two);
-                    SET_HEADER_PORT(reduce_result_downtree.header, {{ op.logical_port }});
                     sent_two = true;
                 }
-                printf("MESSAGE TO CHILD; %d -> %d \n", my_rank, GET_HEADER_DST(reduce_result_downtree.header));
+                SET_HEADER_NUM_ELEMS(reduce_result_downtree.header,1);
+                SET_HEADER_PORT(reduce_result_downtree.header, {{ op.logical_port }});
+                SET_HEADER_OP(reduce_result_downtree.header, SMI_SYNCH);
                 write_channel_intel({{ op.get_channel("cks_control") }}, reduce_result_downtree);
+                printf("MESSAGE TO CHILD; %d -> %d \n", my_rank, GET_HEADER_DST(reduce_result_downtree.header));
             }
             else
             {   
