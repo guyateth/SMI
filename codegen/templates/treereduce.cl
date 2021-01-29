@@ -127,7 +127,6 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 else if (sender_id == 1)
                 {
                     // received contribution from a non-root rank, apply reduce operation
-                    contiguos_reads++;
                     char* ptr = mess.data;
                     char rank = GET_HEADER_SRC(mess.header);
                     {{ op.data_type }} data = *({{ op.data_type }}*)(ptr);
@@ -166,12 +165,8 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
             }
 
             if (sender_id == 0) sender_id = 1;
+            else if (sender_id == 1) sender_id = 2;
             else if (sender_id == 2) sender_id = 0;
-            else if (!valid || contiguos_reads == READS_LIMIT)
-            {
-                sender_id = 2;
-                contiguos_reads = 0;
-            }
         }
 
         else if (stage == 1)
