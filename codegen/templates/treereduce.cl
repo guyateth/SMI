@@ -7,7 +7,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
 {
     __constant int SHIFT_REG = {{ op.shift_reg() }};
 
-    char my_rank;
+    char my_rank = 0;
     char my_parent;
     char child_one;
     char child_two;
@@ -116,7 +116,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                     data_recvd[add_to_root]++;
                     a = add_to_root;
 
-                    printf("MESSAGE FROM APP; %d FROM: %d; TOTAL: %d SHIFT REG: %d\n", my_rank, my_rank, data_recvd[add_to_root], add_to_root);
+                    printf("MESSAGE FROM APP; %c FROM: %c; TOTAL: %d SHIFT REG: %d\n", my_rank, my_rank, data_recvd[add_to_root], add_to_root);
 
                     add_to_root++;
                     if (add_to_root == credits_flow_control)
