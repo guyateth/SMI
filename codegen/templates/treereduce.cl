@@ -47,10 +47,6 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
         }
     }
 
-    for (int i = 0; i < MAX_RANKS; i++)
-    {
-        add_to[i] = 0;
-    }
     int cntr = 0;
     while (true)
     {
@@ -76,6 +72,11 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
             }
             printf("END OF INIT; %d %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, received_request, remaining_elems);
             init = true;
+            #pragma unroll
+            for (int i = 0; i < MAX_RANKS; i++)
+            {
+                add_to[i] = 0;
+            }
         }
         bool valid = false;
 
