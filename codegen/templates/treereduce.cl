@@ -312,7 +312,8 @@ void {{ utils.impl_name_port_type("SMI_Treereduce", op) }}(SMI_TreereduceChannel
     if (chan->my_rank == chan->root_rank) // I'm the root
     {
         COPY_DATA_FROM_NET_MESSAGE(chan, chan->net_2, data_rcv);
-        printf("We recieved a total on root: %d\n", *data_rcv);
+        int *conv_int = (int *) *data_rcv;
+        printf("We recieved a total on root: %d\n", *conv_int);
     }
     
 
