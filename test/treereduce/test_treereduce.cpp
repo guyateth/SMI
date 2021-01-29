@@ -6,7 +6,7 @@
          env  CL_CONTEXT_EMULATOR_DEVICE_INTELFPGA=8 mpirun -np 8 ./test_gather.exe "./gather_emulator_<rank>.aocx"
  */
 
-#define TEST_TIMEOUT 50
+#define TEST_TIMEOUT 120
 
 #include <gtest/gtest.h>
 #include <stdio.h>
@@ -153,7 +153,7 @@ TEST(Treereduce, IntAdd)
     hlslib::ocl::Buffer<char, hlslib::ocl::Access::readWrite> check = context->MakeBuffer<char, hlslib::ocl::Access::readWrite>(1);
     hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_int_add");
 
-    std::vector<int> message_lengths={1,128};
+    std::vector<int> message_lengths={1,64};
     std::vector<int> roots={0,1,4};
     int runs=2;
     for(int root:roots)    //consider different roots
@@ -188,7 +188,7 @@ TEST(Treereduce, IntMax)
     hlslib::ocl::Buffer<char, hlslib::ocl::Access::readWrite> check = context->MakeBuffer<char, hlslib::ocl::Access::readWrite>(1);
     hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_int_max");
 
-    std::vector<int> message_lengths={1,128};
+    std::vector<int> message_lengths={1,64};
     std::vector<int> roots={1,4,7};
     int runs=2;
     for(int root:roots)    //consider different roots
@@ -290,7 +290,7 @@ TEST(Treereduce, IntMaxAD)
     hlslib::ocl::Buffer<char, hlslib::ocl::Access::readWrite> check = context->MakeBuffer<char, hlslib::ocl::Access::readWrite>(1);
     hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_int_max_ad");
 
-    std::vector<int> message_lengths={1,128};
+    std::vector<int> message_lengths={1,64};
     std::vector<int> roots={0,1,4};
     int runs=2;
     for(int root:roots)    //consider different roots
