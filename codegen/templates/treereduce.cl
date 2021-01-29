@@ -30,10 +30,9 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
     char current_buffer_element = 0;
     char add_to_root = 0;
     char contiguos_reads = 0;
+    int stage = 0;
 
     bool init = false;
-
-    int stage = 0;
     bool reduce_mess_ready = false;
     bool sent_one = false;
     bool sent_two = false;
@@ -92,10 +91,6 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                     mess = read_channel_nb_intel({{ op.get_channel("ckr_data") }}, &valid);
                     break;
                 case 2:
-                    if (my_rank == 3) {
-                        cntr++;
-                        if (cntr % 10000 == 0) printf("stillalive");
-                    }
                     reduce_result_downtree = read_channel_nb_intel({{ op.get_channel("ckr_control") }}, &valid);
                     break;
             }
@@ -151,24 +146,25 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                     }
                     add_to[rank] = addto;
                 }
-                else
+                else if (sender_id == 2)
                 {
                     printf("MESSAGE FROM PARENT - FORWARDING; %d %d \n", my_rank, my_parent);
                     // recieved a credit from parent, forward to my children and app
                     stage = 2;
                 }
-            }
 
-            if (data_recvd[current_buffer_element] == num_children) 
-            {
-                // we need to send the current buffer element to our children
-                printf("ALL CONTRIBUTIONS RECIEVED; %d \n", my_rank);
-                stage = 1;
+                if (data_recvd[current_buffer_element] == num_children) 
+                {
+                    // we need to send the current buffer element to our children
+                    printf("ALL CONTRIBUTIONS RECIEVED; %d \n", my_rank);
+                    stage = 1;
+                }
             }
 
             if (sender_id == 0) sender_id = 1;
             else if (sender_id == 1) sender_id = 2;
             else if (sender_id == 2) sender_id = 0;
+            valid = false;
         }
 
         else if (stage == 1)
