@@ -29,7 +29,6 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
 
     char current_buffer_element = 0;
     char add_to_root = 0;
-    char contiguos_reads = 0;
     int stage = 0;
 
     bool init = false;
@@ -78,6 +77,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 add_to[i] = 0;
             }
             current_buffer_element = 0;
+            add_to_root = 0;
         }
         bool valid = false;
 
