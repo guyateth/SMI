@@ -291,7 +291,7 @@ TEST(Treereduce, IntMaxAD)
     hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_int_max_ad");
 
     std::vector<int> message_lengths={1,128, 300};
-    std::vector<int> roots={1,4,7};
+    std::vector<int> roots={0,1,4};
     int runs=2;
     for(int root:roots)    //consider different roots
     {
