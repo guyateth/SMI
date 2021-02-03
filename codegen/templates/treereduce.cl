@@ -69,7 +69,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 if (child_two != -1) num_children ++;
                 received_request = num_children;
             }
-            printf("END OF INIT; %d %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, received_request, remaining_elems);
+            //printf("END OF INIT; %d %d %d %d %d %d\n", my_rank, my_parent, child_one, child_two, received_request, remaining_elems);
             init = true;
             #pragma unroll
             for (int i = 0; i < MAX_RANKS; i++)
@@ -103,7 +103,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
 
                         data_recvd[add_to_root]++;
 
-                        printf("MESSAGE FROM APP; %d FROM: %d; TOTAL: %d SHIFT REG: %d\n", my_rank, my_rank, data_recvd[add_to_root], add_to_root);
+                        //printf("MESSAGE FROM APP; %d FROM: %d; TOTAL: %d SHIFT REG: %d\n", my_rank, my_rank, data_recvd[add_to_root], add_to_root);
 
                         add_to_root++;
                         if (add_to_root == credits_flow_control)
@@ -129,7 +129,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                         {
                             reduce_result[addto][j] = reduce_result[addto][j + 1];
                         }
-                        printf("MESSAGE FROM CHILD %d FROM: %d; TOTAL: %d SHIFT REG: %d VAL: %d\n", my_rank, rank, data_recvd[addto], addto, data);
+                        //printf("MESSAGE FROM CHILD %d FROM: %d; TOTAL: %d SHIFT REG: %d VAL: %d\n", my_rank, rank, data_recvd[addto], addto, data);
 
                         addto++;
                         if (addto == credits_flow_control)
@@ -143,7 +143,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                     reduce_result_downtree = read_channel_nb_intel({{ op.get_channel("ckr_control") }}, &valid);
                     if (valid)
                     {
-                        printf("MESSAGE FROM PARENT - FORWARDING; %d %d \n", my_rank, my_parent);
+                        //printf("MESSAGE FROM PARENT - FORWARDING; %d %d \n", my_rank, my_parent);
                         // recieved a credit from parent, forward to my children and app
                         stage = 2;
                     }
@@ -155,7 +155,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 if (data_recvd[current_buffer_element] == num_children) 
                 {
                     // we need to send the current buffer element to our children
-                    printf("ALL CONTRIBUTIONS RECIEVED; %d \n", my_rank);
+                    //printf("ALL CONTRIBUTIONS RECIEVED; %d \n", my_rank);
                     stage = 1;
                 }
             }
@@ -209,7 +209,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 SET_HEADER_SRC(reduce.header, my_rank);
                 SET_HEADER_OP(reduce.header, SMI_REDUCE);
                 SET_HEADER_NUM_ELEMS(reduce.header,1);
-                printf("MESSAGE TO PARENT; %d -> %d CBE: %d\n", GET_HEADER_SRC(reduce.header), GET_HEADER_DST(reduce.header), current_buffer_element);
+                //printf("MESSAGE TO PARENT; %d -> %d CBE: %d\n", GET_HEADER_SRC(reduce.header), GET_HEADER_DST(reduce.header), current_buffer_element);
                 write_channel_intel({{ op.get_channel("cks_data") }}, reduce);
                 stage = 0;
             } 
@@ -237,7 +237,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 SET_HEADER_PORT(reduce_result_downtree.header, {{ op.logical_port }});
                 SET_HEADER_OP(reduce_result_downtree.header, SMI_SYNCH);
                 write_channel_intel({{ op.get_channel("cks_control") }}, reduce_result_downtree);
-                printf("MESSAGE TO CHILD; %d -> %d CBE: %d\n", my_rank, GET_HEADER_DST(reduce_result_downtree.header), current_buffer_element);
+                //printf("MESSAGE TO CHILD; %d -> %d CBE: %d\n", my_rank, GET_HEADER_DST(reduce_result_downtree.header), current_buffer_element);
             }
             else
             {   
@@ -249,7 +249,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 SET_HEADER_DST(reduce_result_downtree.header, my_rank);
                 SET_HEADER_PORT(reduce_result_downtree.header, {{ op.logical_port }});
                 SET_HEADER_OP(reduce_result_downtree.header, SMI_REDUCE);
-                printf("MESSAGE TO APP; %d -> %d CBE: %d\n", my_rank, GET_HEADER_DST(reduce_result_downtree.header), current_buffer_element);
+                //printf("MESSAGE TO APP; %d -> %d CBE: %d\n", my_rank, GET_HEADER_DST(reduce_result_downtree.header), current_buffer_element);
                 write_channel_intel({{ op.get_channel("treereduce_recv") }}, reduce_result_downtree);
                 remaining_elems --;
                 if (remaining_elems == 0) init = false;
@@ -303,7 +303,7 @@ void {{ utils.impl_name_port_type("SMI_Treereduce", op) }}(SMI_TreereduceChannel
     {
         COPY_DATA_FROM_NET_MESSAGE(chan, chan->net_2, data_rcv);
         int *conv_int = (int *) data_rcv;
-        printf("We recieved a total on root: %d\n", *conv_int);
+        //printf("We recieved a total on root: %d\n", *conv_int);
     }
     
 
