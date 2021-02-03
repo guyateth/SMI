@@ -232,7 +232,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                     SET_HEADER_DST(reduce_result_downtree.header, child_two);
                     sent_two = true;
                 }
-                SET_HEADER_NUM_ELEMS(reduce_result_downtree.header,1);
+                SET_HEADER_NUM_ELEMS(reduce_result_downtree.header,0);
                 SET_HEADER_SRC(reduce_result_downtree.header,my_rank);
                 SET_HEADER_PORT(reduce_result_downtree.header, {{ op.logical_port }});
                 SET_HEADER_OP(reduce_result_downtree.header, SMI_SYNCH);
@@ -244,7 +244,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 sent_one = sent_two = false;
                 stage = 0;
 
-                SET_HEADER_NUM_ELEMS(reduce_result_downtree.header,1);
+                SET_HEADER_NUM_ELEMS(reduce_result_downtree.header,0);
                 SET_HEADER_SRC(reduce_result_downtree.header,my_rank);
                 SET_HEADER_DST(reduce_result_downtree.header, my_rank);
                 SET_HEADER_PORT(reduce_result_downtree.header, {{ op.logical_port }});
