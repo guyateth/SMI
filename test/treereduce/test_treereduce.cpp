@@ -68,7 +68,7 @@ bool runAndReturn(hlslib::ocl::Kernel &kernel, hlslib::ocl::Buffer<char, hlslib:
 
 TEST(Treereduce, MPIinit)
 {
-    ASSERT_EQ(rank_count,2);
+    ASSERT_EQ(rank_count,8);
 }
 
 /*
