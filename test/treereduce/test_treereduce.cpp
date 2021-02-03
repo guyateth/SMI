@@ -68,7 +68,7 @@ bool runAndReturn(hlslib::ocl::Kernel &kernel, hlslib::ocl::Buffer<char, hlslib:
 
 TEST(Treereduce, MPIinit)
 {
-    ASSERT_EQ(rank_count,8);
+    ASSERT_EQ(rank_count,2);
 }
 
 /*
@@ -154,7 +154,7 @@ TEST(Treereduce, IntAdd)
     hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_int_add");
 
     std::vector<int> message_lengths={1,64};
-    std::vector<int> roots={0,1,4};
+    std::vector<int> roots={0,1};
     int runs=2;
     for(int root:roots)    //consider different roots
     {
@@ -189,7 +189,7 @@ TEST(Treereduce, IntMax)
     hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_int_max");
 
     std::vector<int> message_lengths={1,64};
-    std::vector<int> roots={1,4,7};
+    std::vector<int> roots={1};
     int runs=2;
     for(int root:roots)    //consider different roots
     {
@@ -291,7 +291,7 @@ TEST(Treereduce, IntMaxAD)
     hlslib::ocl::Kernel kernel = context->CurrentlyLoadedProgram().MakeKernel("test_int_max_ad");
 
     std::vector<int> message_lengths={1,64};
-    std::vector<int> roots={0,1,4};
+    std::vector<int> roots={0,1};
     int runs=2;
     for(int root:roots)    //consider different roots
     {
