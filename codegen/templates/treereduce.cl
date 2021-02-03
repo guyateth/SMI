@@ -88,73 +88,72 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
             {   // for the root, I have to receive from both sides
                 case 0:
                     mess = read_channel_nb_intel({{ op.get_channel("treereduce_send") }}, &valid);
+                    if (valid)
+                    {
+                        // received root contribution to the reduced result
+                        // apply reduce
+                        char* ptr = mess.data;
+                        {{ op.data_type }} data= *({{ op.data_type }}*) (ptr);
+                        reduce_result[add_to_root][SHIFT_REG] = {{ op.reduce_op() }}(data, reduce_result[add_to_root][0]); // apply reduce
+                        #pragma unroll
+                        for (int j = 0; j < SHIFT_REG; j++)
+                        {
+                            reduce_result[add_to_root][j] = reduce_result[add_to_root][j + 1];
+                        }
+
+                        data_recvd[add_to_root]++;
+                        a = add_to_root;
+
+                        printf("MESSAGE FROM APP; %d FROM: %d; TOTAL: %d SHIFT REG: %d\n", my_rank, my_rank, data_recvd[add_to_root], add_to_root);
+
+                        add_to_root++;
+                        if (add_to_root == credits_flow_control)
+                        {
+                            add_to_root = 0;
+                        }
+                    }
+
                     break;
                 case 1: // read from CK_R, can be done by the root and by the non-root
                     mess = read_channel_nb_intel({{ op.get_channel("ckr_control") }}, &valid);
+                    if (valid)
+                    {
+                        // received contribution from a non-root rank, apply reduce operation
+                        char* ptr = mess.data;
+                        char rank = GET_HEADER_SRC(mess.header);
+                        {{ op.data_type }} data = *({{ op.data_type }}*)(ptr);
+                        char addto = add_to[rank];
+                        data_recvd[addto]++;
+                        a = addto;
+                        reduce_result[addto][SHIFT_REG] = {{ op.reduce_op() }}(data, reduce_result[addto][0]);        // apply reduce
+                        #pragma unroll
+                        for (int j = 0; j < SHIFT_REG; j++)
+                        {
+                            reduce_result[addto][j] = reduce_result[addto][j + 1];
+                        }
+                        printf("MESSAGE FROM CHILD %d FROM: %d; TOTAL: %d SHIFT REG: %d VAL: %d\n", my_rank, rank, data_recvd[addto], addto, data);
+
+                        addto++;
+                        if (addto == credits_flow_control)
+                        {
+                            addto = 0;
+                        }
+                        add_to[rank] = addto;
+                    }
                     break;
                 case 2:
                     reduce_result_downtree = read_channel_nb_intel({{ op.get_channel("ckr_data") }}, &valid);
+                    if (valid)
+                    {
+                        printf("MESSAGE FROM PARENT - FORWARDING; %d %d \n", my_rank, my_parent);
+                        // recieved a credit from parent, forward to my children and app
+                        stage = 2;
+                    }
                     break;
             }
 
             if (valid)
             {
-                char a;
-                if (sender_id == 0)
-                {
-                    // received root contribution to the reduced result
-                    // apply reduce
-                    char* ptr = mess.data;
-                    {{ op.data_type }} data= *({{ op.data_type }}*) (ptr);
-                    reduce_result[add_to_root][SHIFT_REG] = {{ op.reduce_op() }}(data, reduce_result[add_to_root][0]); // apply reduce
-                    #pragma unroll
-                    for (int j = 0; j < SHIFT_REG; j++)
-                    {
-                        reduce_result[add_to_root][j] = reduce_result[add_to_root][j + 1];
-                    }
-
-                    data_recvd[add_to_root]++;
-                    a = add_to_root;
-
-                    printf("MESSAGE FROM APP; %d FROM: %d; TOTAL: %d SHIFT REG: %d\n", my_rank, my_rank, data_recvd[add_to_root], add_to_root);
-
-                    add_to_root++;
-                    if (add_to_root == credits_flow_control)
-                    {
-                        add_to_root = 0;
-                    }
-                }
-                else if (sender_id == 1)
-                {
-                    // received contribution from a non-root rank, apply reduce operation
-                    char* ptr = mess.data;
-                    char rank = GET_HEADER_SRC(mess.header);
-                    {{ op.data_type }} data = *({{ op.data_type }}*)(ptr);
-                    char addto = add_to[rank];
-                    data_recvd[addto]++;
-                    a = addto;
-                    reduce_result[addto][SHIFT_REG] = {{ op.reduce_op() }}(data, reduce_result[addto][0]);        // apply reduce
-                    #pragma unroll
-                    for (int j = 0; j < SHIFT_REG; j++)
-                    {
-                        reduce_result[addto][j] = reduce_result[addto][j + 1];
-                    }
-                    printf("MESSAGE FROM CHILD %d FROM: %d; TOTAL: %d SHIFT REG: %d VAL: %d\n", my_rank, rank, data_recvd[addto], addto, data);
-
-                    addto++;
-                    if (addto == credits_flow_control)
-                    {
-                        addto = 0;
-                    }
-                    add_to[rank] = addto;
-                }
-                else if (sender_id == 2)
-                {
-                    printf("MESSAGE FROM PARENT - FORWARDING; %d %d \n", my_rank, my_parent);
-                    // recieved a credit from parent, forward to my children and app
-                    stage = 2;
-                }
-
                 if (data_recvd[current_buffer_element] == num_children) 
                 {
                     // we need to send the current buffer element to our children
