@@ -1,0 +1,9 @@
+{
+    "fpgas": {
+      "fpga-0001:acl0": "treereduce",
+      "fpga-0001:acl1": "treereduce"
+    },
+    "connections": {
+      "fpga-0001:acl0:ch2": "fpga-0001:acl1:ch3"
+    }
+  }
