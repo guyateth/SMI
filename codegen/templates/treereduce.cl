@@ -114,7 +114,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
 
                     break;
                 case 1: // read from CK_R, can be done by the root and by the non-root
-                    mess = read_channel_nb_intel({{ op.get_channel("ckr_control") }}, &valid);
+                    mess = read_channel_nb_intel({{ op.get_channel("ckr_data") }}, &valid);
                     if (valid)
                     {
                         // received contribution from a non-root rank, apply reduce operation
@@ -140,7 +140,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                     }
                     break;
                 case 2:
-                    reduce_result_downtree = read_channel_nb_intel({{ op.get_channel("ckr_data") }}, &valid);
+                    reduce_result_downtree = read_channel_nb_intel({{ op.get_channel("ckr_control") }}, &valid);
                     if (valid)
                     {
                         printf("MESSAGE FROM PARENT - FORWARDING; %d %d \n", my_rank, my_parent);
@@ -207,10 +207,10 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 SET_HEADER_DST(reduce.header, my_parent);
                 SET_HEADER_PORT(reduce.header, {{ op.logical_port }});
                 SET_HEADER_SRC(reduce.header, my_rank);
-                SET_HEADER_OP(reduce.header, SMI_SYNCH);
+                SET_HEADER_OP(reduce.header, SMI_REDUCE);
                 SET_HEADER_NUM_ELEMS(reduce.header,1);
                 printf("MESSAGE TO PARENT; %d -> %d CBE: %d\n", GET_HEADER_SRC(reduce.header), GET_HEADER_DST(reduce.header), current_buffer_element);
-                write_channel_intel({{ op.get_channel("cks_control") }}, reduce);
+                write_channel_intel({{ op.get_channel("cks_data") }}, reduce);
                 stage = 0;
             } 
             else 
@@ -235,8 +235,8 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 SET_HEADER_NUM_ELEMS(reduce_result_downtree.header,0);
                 SET_HEADER_SRC(reduce_result_downtree.header,my_rank);
                 SET_HEADER_PORT(reduce_result_downtree.header, {{ op.logical_port }});
-                SET_HEADER_OP(reduce_result_downtree.header, SMI_REDUCE);
-                write_channel_intel({{ op.get_channel("cks_data") }}, reduce_result_downtree);
+                SET_HEADER_OP(reduce_result_downtree.header, SMI_SYNCH);
+                write_channel_intel({{ op.get_channel("cks_control") }}, reduce_result_downtree);
                 printf("MESSAGE TO CHILD; %d -> %d CBE: %d\n", my_rank, GET_HEADER_DST(reduce_result_downtree.header), current_buffer_element);
             }
             else
