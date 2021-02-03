@@ -143,7 +143,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                     reduce_result_downtree = read_channel_nb_intel({{ op.get_channel("ckr_control") }}, &valid);
                     if (valid)
                     {
-                        printf("MESSAGE FROM PARENT - FORWARDING; %d %d \n", my_rank, my_parent);
+                        //printf("MESSAGE FROM PARENT - FORWARDING; %d %d \n", my_rank, my_parent);
                         // recieved a credit from parent, forward to my children and app
                         stage = 2;
                     }
@@ -237,7 +237,7 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 SET_HEADER_PORT(reduce_result_downtree.header, {{ op.logical_port }});
                 SET_HEADER_OP(reduce_result_downtree.header, SMI_SYNCH);
                 write_channel_intel({{ op.get_channel("cks_control") }}, reduce_result_downtree);
-                printf("MESSAGE TO CHILD; %d -> %d CBE: %d\n", my_rank, GET_HEADER_DST(reduce_result_downtree.header), current_buffer_element);
+                //printf("MESSAGE TO CHILD; %d -> %d CBE: %d\n", my_rank, GET_HEADER_DST(reduce_result_downtree.header), current_buffer_element);
             }
             else
             {   
@@ -303,7 +303,7 @@ void {{ utils.impl_name_port_type("SMI_Treereduce", op) }}(SMI_TreereduceChannel
     {
         COPY_DATA_FROM_NET_MESSAGE(chan, chan->net_2, data_rcv);
         int *conv_int = (int *) data_rcv;
-        printf("We recieved a total on root: %d\n", *conv_int);
+        //printf("We recieved a total on root: %d\n", *conv_int);
     }
     
 
