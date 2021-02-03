@@ -102,7 +102,6 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                         }
 
                         data_recvd[add_to_root]++;
-                        a = add_to_root;
 
                         printf("MESSAGE FROM APP; %d FROM: %d; TOTAL: %d SHIFT REG: %d\n", my_rank, my_rank, data_recvd[add_to_root], add_to_root);
 
@@ -124,7 +123,6 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                         {{ op.data_type }} data = *({{ op.data_type }}*)(ptr);
                         char addto = add_to[rank];
                         data_recvd[addto]++;
-                        a = addto;
                         reduce_result[addto][SHIFT_REG] = {{ op.reduce_op() }}(data, reduce_result[addto][0]);        // apply reduce
                         #pragma unroll
                         for (int j = 0; j < SHIFT_REG; j++)
