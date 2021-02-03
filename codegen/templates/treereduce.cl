@@ -140,11 +140,12 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                     }
                     break;
                 case 2:
-                    reduce_result_downtree = read_channel_nb_intel({{ op.get_channel("ckr_control") }}, &valid);
+                    mess = read_channel_nb_intel({{ op.get_channel("ckr_control") }}, &valid);
                     if (valid)
                     {
                         //printf("MESSAGE FROM PARENT - FORWARDING; %d %d \n", my_rank, my_parent);
                         // recieved a credit from parent, forward to my children and app
+                        reduce_result_downtree = mess;
                         stage = 2;
                     }
                     break;
@@ -241,8 +242,6 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
             }
             else
             {   
-                sent_one = sent_two = false;
-                stage = 0;
 
                 SET_HEADER_NUM_ELEMS(reduce_result_downtree.header,0);
                 SET_HEADER_SRC(reduce_result_downtree.header,my_rank);
@@ -253,6 +252,8 @@ __kernel void smi_kernel_treereduce_{{ op.logical_port }}(char num_rank)
                 write_channel_intel({{ op.get_channel("treereduce_recv") }}, reduce_result_downtree);
                 remaining_elems --;
                 if (remaining_elems == 0) init = false;
+                sent_one = sent_two = false;
+                stage = 0;
                 
             }
         }      
