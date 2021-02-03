@@ -91,7 +91,7 @@ add_test(
  )
 
 #treereduce
-smi_target(test_treereduce "${CMAKE_CURRENT_SOURCE_DIR}/treereduce/treereduce.json" "${CMAKE_CURRENT_SOURCE_DIR}/treereduce/test_treereduce.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/treereduce/treereduce.cl" 8)
+smi_target(test_treereduce "${CMAKE_CURRENT_SOURCE_DIR}/treereduce/treereduce_two.json" "${CMAKE_CURRENT_SOURCE_DIR}/treereduce/test_treereduce.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/treereduce/treereduce.cl" 8)
 target_link_libraries(test_treereduce_host gtest)
 
 add_test(

@@ -367,7 +367,7 @@ int main(int argc, char *argv[])
     if(argc==2)
         program_path =argv[1];
     else
-        program_path="emulator_<rank>/treereduce_two.aocx";
+        program_path="emulator_<rank>/treereduce.aocx";
     ::testing::TestEventListeners& listeners =
             ::testing::UnitTest::GetInstance()->listeners();
     CHECK_MPI(MPI_Init(&argc, &argv));
